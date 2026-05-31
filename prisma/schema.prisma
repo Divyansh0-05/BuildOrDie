@@ -23,6 +23,7 @@ model User {
   totalShipped        Int       @default(0)
   totalKicked         Int       @default(0)
   createdAt           DateTime  @default(now())
+  deletedAt           DateTime?
   projects            Project[]
   votes               Vote[]
 }
