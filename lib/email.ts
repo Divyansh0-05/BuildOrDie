@@ -67,3 +67,20 @@ export function featuredEmail(projectTitle: string, projectUrl: string) {
     text: `You made the strip.\n${projectTitle} is featured.\n${projectUrl}`,
   };
 }
+
+export function founderPassEmail() {
+  return {
+    subject: "Founder Pass unlocked. You now have 2 ideas and a 6h safety net.",
+    html: `<div style="background:#1A1A2E;color:#F0F0FF;padding:32px;font-family:Arial,sans-serif"><h1>Founder Pass Unlocked</h1><p>Founder Pass unlocked. You now have 2 ideas and a 6h safety net.</p></div>`,
+    text: `Founder Pass unlocked. You now have 2 ideas and a 6h safety net.`,
+  };
+}
+
+export function boostQueuedEmail(projectTitle: string, dateStr: string) {
+  return {
+    subject: `Boost confirmed. Your ad goes live on ${dateStr}.`,
+    html: `<div style="background:#1A1A2E;color:#F0F0FF;padding:32px;font-family:Arial,sans-serif"><h1>Boost Confirmed</h1><p>Your project "${projectTitle}" has been boosted. Your ad goes live on ${dateStr}.</p></div>`,
+    text: `Boost confirmed. Your project "${projectTitle}" has been boosted. Your ad goes live on ${dateStr}.`,
+  };
+}
+

@@ -94,3 +94,10 @@ model BuildUpdate {
   content   String   @db.VarChar(280)
   createdAt DateTime @default(now())
 }
+
+model DodoWebhookLog {
+  id        String   @id @default(cuid())
+  eventId   String   @unique
+  createdAt DateTime @default(now())
+}
+
