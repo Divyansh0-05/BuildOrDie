@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply bg-bg-primary text-text-primary;
+  }
+
+  body {
+    @apply min-h-screen bg-bg-primary text-text-primary antialiased;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
