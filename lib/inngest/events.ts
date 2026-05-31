@@ -5,7 +5,9 @@ const hour = 60 * 60 * 1000;
 type ProjectEventName =
   | "project/warn"
   | "project/kick"
-  | "project/final-kick";
+  | "project/final-kick"
+  | "project/boost-activate"
+  | "project/boost-expire";
 
 function scheduledProjectEvent(
   projectId: string,
@@ -29,9 +31,37 @@ export async function scheduleProjectLifecycleEvents(projectId: string) {
 }
 
 export async function cancelProjectLifecycleEvents(projectId: string) {
-  return inngest.send({
+  return inngest.send(createProjectCancelEvent(projectId));
+}
+
+export function createProjectCancelEvent(projectId: string) {
+  return {
     id: `project/cancel:${projectId}:${Date.now()}`,
     name: "project/cancel",
     data: { projectId },
+  };
+}
+
+export async function scheduleFinalKickEvent(projectId: string, hoursFromNow = 6) {
+  return inngest.send(
+    scheduledProjectEvent(projectId, "project/final-kick", hoursFromNow),
+  );
+}
+
+export async function scheduleBoostActivation(projectId: string, startsAt: Date) {
+  return inngest.send({
+    id: `project/boost-activate:${projectId}`,
+    name: "project/boost-activate",
+    data: { projectId },
+    ts: startsAt.getTime(),
+  });
+}
+
+export async function scheduleBoostExpiry(projectId: string, expiresAt: Date) {
+  return inngest.send({
+    id: `project/boost-expire:${projectId}`,
+    name: "project/boost-expire",
+    data: { projectId },
+    ts: expiresAt.getTime(),
   });
 }
