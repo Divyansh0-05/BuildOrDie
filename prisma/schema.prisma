@@ -8,7 +8,88 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model ScaffoldHealth {
+model User {
+  id                  String    @id @default(cuid())
+  clerkId             String    @unique
+  username            String    @unique
+  email               String    @unique
+  displayName         String
+  avatarUrl           String?
+  xHandle             String?
+  bio                 String?
+  plan                Plan      @default(FREE)
+  role                Role      @default(BUILDER)
+  investorAccessUntil DateTime?
+  totalShipped        Int       @default(0)
+  totalKicked         Int       @default(0)
+  createdAt           DateTime  @default(now())
+  projects            Project[]
+  votes               Vote[]
+}
+
+enum Plan {
+  FREE
+  FOUNDER
+}
+
+enum Role {
+  BUILDER
+  INVESTOR
+  ADMIN
+}
+
+model Project {
+  id             String        @id @default(cuid())
+  userId         String
+  user           User          @relation(fields: [userId], references: [id])
+  title          String
+  tagline        String        @db.VarChar(140)
+  description    String        @db.Text
+  logoUrl        String?
+  screenshotUrl  String?
+  liveUrl        String?
+  repoUrl        String?
+  tags           String[]
+  status         ProjectStatus @default(BUILDING)
+  ideaDeclaredAt DateTime      @default(now())
+  deadlineAt     DateTime
+  launchedAt     DateTime?
+  warningsSent   Int           @default(0)
+  isBoosted      Boolean       @default(false)
+  boostedFrom    DateTime?
+  boostedUntil   DateTime?
+  boostQueuePos  Int?
+  isFeatured     Boolean       @default(false)
+  voteCount      Int           @default(0)
+  votes          Vote[]
+  toolsUsed      String[]
+  buildUpdates   BuildUpdate[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+enum ProjectStatus {
+  BUILDING
+  LAUNCHED
+  WARNED
+  KICKED
+}
+
+model Vote {
   id        String   @id @default(cuid())
+  userId    String
+  projectId String
+  user      User     @relation(fields: [userId], references: [id])
+  project   Project  @relation(fields: [projectId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, projectId])
+}
+
+model BuildUpdate {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+  content   String   @db.VarChar(280)
   createdAt DateTime @default(now())
 }
