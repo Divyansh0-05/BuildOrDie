@@ -23,7 +23,7 @@ export function NavbarLinks({ userId, isAdmin, isInvestor }: NavbarLinksProps) {
   const getLinkClass = (href: string) => {
     const isActive = pathname === href;
     return cn(
-      "px-2.5 py-1.5 border rounded transition-all select-none font-mono text-[10px] font-bold uppercase",
+      "px-3.5 py-2 border rounded transition-all select-none font-mono text-xs font-bold uppercase",
       isActive
         ? "border-brand-orange text-brand-orange bg-brand-orange/5 shadow-[0_0_8px_rgba(255,85,0,0.08)]"
         : "border-transparent text-text-muted hover:border-border hover:text-text-primary"
@@ -31,7 +31,7 @@ export function NavbarLinks({ userId, isAdmin, isInvestor }: NavbarLinksProps) {
   };
 
   return (
-    <div className="flex items-center gap-1 sm:gap-2 select-none">
+    <div className="flex items-center gap-1.5 sm:gap-2.5 select-none">
       {links.map((link) => (
         <Link key={link.href} href={link.href} className={getLinkClass(link.href)}>
           {link.label}
@@ -58,12 +58,12 @@ export function NavbarLinks({ userId, isAdmin, isInvestor }: NavbarLinksProps) {
 
       {userId && (
         <>
-          <div className="h-4 w-[1px] bg-border mx-1" />
+          <div className="h-5 w-[1px] bg-border mx-1.5" />
           <Link
             href="/dashboard"
             className={getLinkClass("/dashboard")}
           >
-            DASHBOARD
+             DASHBOARD
           </Link>
         </>
       )}

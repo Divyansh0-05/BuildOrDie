@@ -39,7 +39,7 @@ export function SectionLabel({ label, className, ...props }: SectionLabelProps) 
   return (
     <div
       className={cn(
-        "font-mono text-[9px] font-bold tracking-[0.15em] text-text-muted uppercase flex items-center gap-2 py-2 mb-3 select-none",
+        "font-mono text-[11px] font-bold tracking-[0.15em] text-text-muted uppercase flex items-center gap-3 py-2.5 mb-4 select-none",
         className
       )}
       {...props}
@@ -74,7 +74,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
   return (
     <span
       className={cn(
-        "px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider font-mono select-none",
+        "px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider font-mono select-none",
         styles[status],
         className
       )}
@@ -95,7 +95,7 @@ interface BuilderAvatarProps {
 export function BuilderAvatar({
   xHandle,
   displayName,
-  size = 32,
+  size = 40,
   className,
 }: BuilderAvatarProps) {
   const [imgFailed, setImgFailed] = useState(false);
@@ -110,7 +110,7 @@ export function BuilderAvatar({
   return (
     <div
       className={cn(
-        "rounded-full border-2 border-surface overflow-hidden shrink-0 select-none flex items-center justify-center font-mono font-bold text-[10px] tracking-tight bg-rock-3 text-text-secondary",
+        "rounded-full border-2 border-surface overflow-hidden shrink-0 select-none flex items-center justify-center font-mono font-bold text-xs tracking-tight bg-rock-3 text-text-secondary",
         className
       )}
       style={{ width: `${size}px`, height: `${size}px` }}
@@ -151,16 +151,16 @@ export function StatBar({ stats, className }: StatBarProps) {
       )}
     >
       {stats.map((stat, i) => (
-        <div key={i} className="bg-surface p-4">
+        <div key={i} className="bg-surface p-5">
           <div
             className={cn(
-              "font-mono text-2xl font-extrabold tracking-tight line-clamp-1",
+              "font-mono text-3xl font-extrabold tracking-tight line-clamp-1",
               stat.color || "text-text-primary"
             )}
           >
             {stat.value}
           </div>
-          <div className="font-mono text-[9px] font-bold text-text-muted mt-1 uppercase tracking-wider">
+          <div className="font-mono text-[11px] font-bold text-text-muted mt-1.5 uppercase tracking-wider">
             {stat.label}
           </div>
         </div>
@@ -194,34 +194,34 @@ export function PassCard({
   return (
     <StoneCard
       variant={isPopular ? "ember" : "default"}
-      className={cn("p-6 flex flex-col justify-between relative", className)}
+      className={cn("p-8 flex flex-col justify-between relative", className)}
     >
       {isPopular && (
-        <span className="absolute -top-3 right-4 bg-brand-orange text-white text-[8px] font-black tracking-widest px-2.5 py-0.5 rounded uppercase">
+        <span className="absolute -top-3.5 right-4 bg-brand-orange text-white text-[10px] font-black tracking-widest px-3 py-1 rounded uppercase">
           MOST POPULAR
         </span>
       )}
 
       <div>
-        <div className="text-xl font-bold font-gothic text-text-primary tracking-wide mb-1 flex items-center gap-1.5">
+        <div className="text-2xl font-bold font-gothic text-text-primary tracking-wide mb-1 flex items-center gap-1.5">
           <span>{isPopular ? "🏆" : "🔥"}</span>
           <span>{name}</span>
         </div>
-        <div className="flex items-baseline gap-1 mt-2">
-          <span className="font-mono text-3xl font-extrabold text-brand-orange tracking-tighter">
+        <div className="flex items-baseline gap-1 mt-2.5">
+          <span className="font-mono text-4xl font-extrabold text-brand-orange tracking-tighter">
             {price}
           </span>
-          <span className="text-[9px] font-mono text-text-muted uppercase tracking-wider">
+          <span className="text-[11px] font-mono text-text-muted uppercase tracking-wider font-bold">
             {period}
           </span>
         </div>
 
-        <div className="h-[1px] bg-border my-4" />
+        <div className="h-[1px] bg-border my-5" />
 
-        <ul className="space-y-2 mb-6">
+        <ul className="space-y-2.5 mb-8">
           {features.map((feat, i) => (
-            <li key={i} className="text-xs text-text-secondary flex items-start gap-2 leading-relaxed">
-              <span className="text-brand-orange shrink-0 select-none">✓</span>
+            <li key={i} className="text-sm text-text-secondary flex items-start gap-2.5 leading-relaxed">
+              <span className="text-brand-orange shrink-0 select-none font-bold">✓</span>
               <span>{feat}</span>
             </li>
           ))}
@@ -231,7 +231,7 @@ export function PassCard({
       <button
         onClick={onBuy}
         className={cn(
-          "w-full py-2.5 rounded font-mono font-bold text-xs uppercase tracking-wider transition-all hover:bg-brand-amber text-white bg-brand-orange border border-brand-orange",
+          "w-full py-3 rounded font-mono font-bold text-sm uppercase tracking-wider transition-all hover:bg-brand-amber text-white bg-brand-orange border border-brand-orange",
           !isPopular && "bg-transparent border-border text-text-muted hover:border-brand-orange hover:text-brand-orange hover:bg-transparent"
         )}
       >

@@ -109,45 +109,45 @@ export default async function ProjectPage({ params }: { params: { id: string } }
   activityEvents.sort((a, b) => b.time.getTime() - a.time.getTime());
 
   return (
-    <main className="min-h-screen bg-bg-primary px-6 py-10 text-text-primary pb-20 select-none">
-      <div className="mx-auto max-w-6xl space-y-6">
+    <main className="min-h-screen bg-bg-primary px-8 py-12 text-text-primary pb-24 select-none">
+      <div className="mx-auto max-w-6xl space-y-7">
         <Link
           href="/"
-          className="inline-flex items-center gap-1 font-mono text-[10px] font-bold text-text-muted hover:text-text-secondary uppercase select-none mb-2"
+          className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-text-muted hover:text-text-secondary uppercase select-none mb-3"
         >
           ← back to feed
         </Link>
 
         {/* Project Header Banner */}
-        <div className="flex flex-wrap items-start gap-4 pb-6 border-b border-border">
-          <div className="w-14 h-14 rounded border border-border bg-rock-3 flex items-center justify-center font-mono font-bold text-xl text-brand-orange uppercase">
+        <div className="flex flex-wrap items-start gap-5 pb-8 border-b border-border">
+          <div className="w-16 h-16 rounded border border-border bg-rock-3 flex items-center justify-center font-mono font-bold text-2xl text-brand-orange uppercase">
             {project.title.slice(0, 2).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap items-baseline gap-2.5 mb-1.5">
-              <h1 className="font-gothic text-4xl font-bold text-text-primary tracking-wide leading-none">
+            <div className="flex flex-wrap items-baseline gap-3 mb-2">
+              <h1 className="font-gothic text-5xl font-bold text-text-primary tracking-wide leading-none">
                 {project.title}
               </h1>
-              <span className="font-mono text-[9px] font-bold tracking-wider px-2 py-0.5 border border-border text-text-secondary uppercase bg-rock-2">
+              <span className="font-mono text-[11px] font-bold tracking-wider px-3 py-1 border border-border text-text-secondary uppercase bg-rock-2">
                 {project.status}
               </span>
             </div>
-            <p className="text-sm text-text-secondary font-mono leading-relaxed max-w-2xl">
+            <p className="text-base text-text-secondary font-mono leading-relaxed max-w-2xl">
               {project.tagline}
             </p>
           </div>
         </div>
 
         {/* Main Grid */}
-        <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
+        <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
           {/* Main Content Column */}
-          <div className="space-y-6">
+          <div className="space-y-7">
             {project.status === ProjectStatus.KICKED && <KickedBanner />}
 
             {/* Countdown timer: dominant focus */}
             {(project.status === ProjectStatus.BUILDING ||
               project.status === ProjectStatus.WARNED) && (
-              <div className="shadow-[0_0_25px_rgba(255,85,0,0.1)]">
+              <div className="shadow-[0_0_25px_rgba(255,85,0,0.15)]">
                 <CountdownTimer
                   deadlineAt={project.deadlineAt.toISOString()}
                   ideaDeclaredAt={project.ideaDeclaredAt.toISOString()}
@@ -156,10 +156,10 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             )}
 
             {/* Overview / Details */}
-            <div className="space-y-2">
+            <div className="space-y-3.5">
               <SectionLabel label="WHAT IT DOES" />
-              <StoneCard className="p-6 bg-surface/30">
-                <p className="font-serif text-base text-text-secondary leading-loose whitespace-pre-wrap">
+              <StoneCard className="p-8 bg-surface/30">
+                <p className="font-serif text-lg text-text-secondary leading-loose whitespace-pre-wrap">
                   {project.description}
                 </p>
                 {project.screenshotUrl && (
@@ -167,15 +167,15 @@ export default async function ProjectPage({ params }: { params: { id: string } }
                   <img
                     src={project.screenshotUrl}
                     alt={project.title}
-                    className="mt-6 w-full border border-border rounded"
+                    className="mt-8 w-full border border-border rounded"
                   />
                 )}
                 {/* Tags */}
-                <div className="mt-6 flex flex-wrap gap-2">
+                <div className="mt-8 flex flex-wrap gap-2.5">
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="bg-rock-3 border border-border px-2.5 py-1 text-[10px] font-mono text-text-muted uppercase"
+                      className="bg-rock-3 border border-border px-3 py-1.5 text-xs font-mono text-text-muted uppercase font-bold"
                     >
                       {tag}
                     </span>
@@ -183,7 +183,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
                   {project.toolsUsed.map((tool) => (
                     <span
                       key={tool}
-                      className="bg-brand-orange/5 border border-brand-orange/15 px-2.5 py-1 text-[10px] font-mono text-text-secondary"
+                      className="bg-brand-orange/5 border border-brand-orange/15 px-3 py-1.5 text-xs font-mono text-text-secondary font-bold"
                     >
                       {tool}
                     </span>
@@ -193,23 +193,23 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             </div>
 
             {/* Build Log / Timeline */}
-            <div className="space-y-2">
+            <div className="space-y-3.5">
               <SectionLabel label="BUILD LOG & ACTIVITY" />
-              <StoneCard className="p-6 bg-surface/30 space-y-6">
+              <StoneCard className="p-8 bg-surface/30 space-y-7">
                 {/* Show updates form if owner */}
                 {isOwner && (
-                  <div className="pb-4 border-b border-border/40">
+                  <div className="pb-5 border-b border-border/40">
                     <BuildUpdateForm projectId={project.id} />
                   </div>
                 )}
 
                 {/* Timeline */}
-                <div className="relative border-l border-border pl-5 ml-2.5 space-y-6">
+                <div className="relative border-l border-border pl-6 ml-3.5 space-y-7">
                   {activityEvents.map((event, idx) => (
                     <div key={idx} className="relative">
                       {/* Timeline dot */}
                       <span
-                        className={`absolute -left-[25px] top-1.5 w-2 h-2 rounded-full border border-surface ${
+                        className={`absolute -left-[30px] top-2 w-3.5 h-3.5 rounded-full border border-surface ${
                           event.type === "declare" || event.type === "warning"
                             ? "bg-brand-orange"
                             : event.type === "shipped"
@@ -219,11 +219,11 @@ export default async function ProjectPage({ params }: { params: { id: string } }
                             : "bg-text-muted"
                         }`}
                       />
-                      <div className="space-y-0.5">
-                        <div className="text-xs font-mono font-bold text-text-primary">
+                      <div className="space-y-1">
+                        <div className="text-sm font-mono font-bold text-text-primary">
                           {event.title}
                         </div>
-                        <div className="text-[9px] font-mono text-text-muted">
+                        <div className="text-[11px] font-mono text-text-muted font-bold">
                           {event.time.toLocaleString()}
                         </div>
                       </div>
@@ -234,28 +234,28 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             </div>
 
             {/* Discussion (read-only placeholder as in mockup) */}
-            <div className="space-y-2">
+            <div className="space-y-3.5">
               <SectionLabel label="DISCUSSION" />
-              <StoneCard className="p-6 bg-surface/30">
+              <StoneCard className="p-8 bg-surface/30">
                 <textarea
                   disabled
                   placeholder="DISCUSSION ROOM LOCKED FOR DEMO V1."
-                  className="w-full bg-rock border border-border p-3 rounded text-xs font-mono text-text-muted outline-none select-none h-20 resize-none"
+                  className="w-full bg-rock border border-border p-4 rounded text-sm font-mono text-text-muted outline-none select-none h-24 resize-none font-bold"
                 />
               </StoneCard>
             </div>
           </div>
 
           {/* Sidebar / Aside Column */}
-          <div className="space-y-6">
+          <div className="space-y-7">
             {/* Community votes */}
-            <div className="space-y-2">
+            <div className="space-y-3.5">
               <SectionLabel label="COMMUNITY VOTES" />
-              <StoneCard className="p-5 text-center bg-rock">
-                <div className="font-mono text-4xl font-extrabold tracking-tighter text-text-primary leading-none mb-1">
+              <StoneCard className="p-6 text-center bg-rock">
+                <div className="font-mono text-5xl font-extrabold tracking-tighter text-text-primary leading-none mb-1">
                   {project.voteCount}
                 </div>
-                <div className="font-mono text-[9px] text-text-muted uppercase tracking-wider mb-4">
+                <div className="font-mono text-[11px] text-text-muted uppercase tracking-wider mb-4.5 font-bold">
                   {"// total votes"}
                 </div>
                 <VoteButton
@@ -267,48 +267,48 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             </div>
 
             {/* Builder profile info */}
-            <div className="space-y-2">
+            <div className="space-y-3.5">
               <SectionLabel label="BUILDER" />
-              <StoneCard className="p-5 bg-rock">
-                <div className="flex items-center gap-3.5 mb-4">
+              <StoneCard className="p-6 bg-rock">
+                <div className="flex items-center gap-4 mb-4.5">
                   <BuilderAvatar
                     displayName={project.user.displayName}
                     xHandle={project.user.xHandle}
-                    size={38}
+                    size={46}
                   />
                   <div>
-                    <div className="font-mono text-xs font-bold text-text-primary flex items-center gap-1">
+                    <div className="font-mono text-sm font-bold text-text-primary flex items-center gap-1.5">
                       <span>{project.user.displayName}</span>
                       {project.user.plan === "FOUNDER" && <FounderBadge />}
                     </div>
-                    <div className="text-[10px] text-text-muted font-mono leading-none mt-1">
+                    <div className="text-xs text-text-muted font-mono leading-none mt-1.5 font-bold">
                       @{project.user.username}
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 text-center select-none">
-                  <div className="bg-surface border border-border p-2 rounded-sm">
-                    <div className="font-mono text-sm font-bold text-text-primary leading-none mb-1">
+                <div className="grid grid-cols-2 gap-2.5 text-center select-none font-mono">
+                  <div className="bg-surface border border-border p-2.5 rounded-sm">
+                    <div className="text-base font-bold text-text-primary leading-none mb-1">
                       {project.user.totalShipped}
                     </div>
-                    <div className="text-[7px] text-text-muted font-mono uppercase tracking-wider leading-none">
+                    <div className="text-[9px] text-text-muted font-bold uppercase tracking-wider leading-none">
                       shipped
                     </div>
                   </div>
-                  <div className="bg-surface border border-border p-2 rounded-sm">
-                    <div className="font-mono text-sm font-bold text-text-primary leading-none mb-1">
+                  <div className="bg-surface border border-border p-2.5 rounded-sm">
+                    <div className="text-base font-bold text-text-primary leading-none mb-1">
                       {project.user.totalKicked}
                     </div>
-                    <div className="text-[7px] text-text-muted font-mono uppercase tracking-wider leading-none">
+                    <div className="text-[9px] text-text-muted font-bold uppercase tracking-wider leading-none">
                       kicked
                     </div>
                   </div>
-                  <div className="bg-surface border border-border p-2 rounded-sm col-span-2">
-                    <div className="font-mono text-sm font-bold text-brand-orange leading-none mb-1">
+                  <div className="bg-surface border border-border p-2.5 rounded-sm col-span-2">
+                    <div className="text-base font-bold text-brand-orange leading-none mb-1">
                       {shipRate}%
                     </div>
-                    <div className="text-[7px] text-text-muted font-mono uppercase tracking-wider leading-none">
+                    <div className="text-[9px] text-text-muted font-bold uppercase tracking-wider leading-none">
                       ship rate
                     </div>
                   </div>
@@ -318,13 +318,13 @@ export default async function ProjectPage({ params }: { params: { id: string } }
 
             {/* Tech stack */}
             {project.toolsUsed.length > 0 && (
-              <div className="space-y-2">
+              <div className="space-y-3.5">
                 <SectionLabel label="BUILT WITH" />
-                <StoneCard className="p-4 bg-rock divide-y divide-border">
+                <StoneCard className="p-5 bg-rock divide-y divide-border">
                   {project.toolsUsed.map((tool) => (
-                    <div key={tool} className="flex justify-between items-center py-2 text-[10px] font-mono">
-                      <span className="text-text-secondary">{tool}</span>
-                      <span className="text-text-muted text-[8px] uppercase">stack tool</span>
+                    <div key={tool} className="flex justify-between items-center py-2.5 text-xs font-mono">
+                      <span className="text-text-secondary font-bold">{tool}</span>
+                      <span className="text-text-muted text-[10px] uppercase font-bold">stack tool</span>
                     </div>
                   ))}
                 </StoneCard>
@@ -333,9 +333,9 @@ export default async function ProjectPage({ params }: { params: { id: string } }
 
             {/* Owner specific project actions */}
             {isOwner && (
-              <div className="space-y-2">
+              <div className="space-y-3.5">
                 <SectionLabel label="PROJECT CONSOLE" />
-                <StoneCard className="p-4 bg-rock border-dashed border-border-strong">
+                <StoneCard className="p-5 bg-rock border-dashed border-border-strong">
                   <ProjectActions
                     projectId={project.id}
                     title={project.title}
@@ -352,7 +352,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full bg-brand-green hover:bg-brand-green/90 text-white font-mono font-bold text-xs uppercase tracking-wider text-center py-3 rounded transition-colors"
+                className="block w-full bg-brand-green hover:bg-brand-green/90 text-white font-mono font-bold text-sm uppercase tracking-wider text-center py-3.5 rounded transition-colors"
               >
                 🚀 Open Live app
               </a>
@@ -366,7 +366,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full border border-brand-orange text-brand-orange hover:bg-brand-orange/5 font-mono font-bold text-xs uppercase tracking-wider text-center py-3 rounded transition-colors"
+                className="block w-full border border-brand-orange text-brand-orange hover:bg-brand-orange/5 font-mono font-bold text-sm uppercase tracking-wider text-center py-3.5 rounded transition-colors"
               >
                 Share on X / Twitter
               </a>

@@ -38,17 +38,17 @@ export function FeedRow({ rank, project, hasVoted = false }: FeedRowProps) {
   return (
     <div
       className={cn(
-        "group flex items-start gap-4 py-5 px-3 border-b border-border hover:bg-surface/30 transition-all duration-150 relative",
+        "group flex items-start gap-5 py-7 px-4 border-b border-border hover:bg-surface/30 transition-all duration-150 relative",
         project.isBoosted && "bg-brand-orange/[0.02] border-l-2 border-l-brand-orange"
       )}
     >
       {/* Rank Indicator */}
-      <span className="font-mono text-xs text-text-muted/60 w-5 shrink-0 pt-3 select-none">
+      <span className="font-mono text-sm text-text-muted/60 w-6 shrink-0 pt-3 select-none">
         {rankStr}
       </span>
 
       {/* Upvote Column */}
-      <div className="shrink-0 w-8 flex flex-col items-center">
+      <div className="shrink-0 w-10 flex flex-col items-center">
         <VoteButton
           projectId={project.id}
           initialVotes={project.voteCount}
@@ -59,7 +59,7 @@ export function FeedRow({ rank, project, hasVoted = false }: FeedRowProps) {
 
       {/* Project Logo/Icon */}
       <Link href={`/project/${project.id}`} className="shrink-0 pt-1">
-        <div className="w-12 h-12 rounded border border-border bg-rock-3 flex items-center justify-center font-mono font-bold text-lg text-text-secondary select-none group-hover:border-brand-orange/45 transition-colors">
+        <div className="w-14 h-14 rounded border border-border bg-rock-3 flex items-center justify-center font-mono font-bold text-xl text-text-secondary select-none group-hover:border-brand-orange/45 transition-colors">
           {project.logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -75,21 +75,21 @@ export function FeedRow({ rank, project, hasVoted = false }: FeedRowProps) {
 
       {/* Project Body */}
       <div className="flex-1 min-w-0">
-        <div className="flex flex-wrap items-baseline gap-2.5 mb-1">
+        <div className="flex flex-wrap items-baseline gap-2.5 mb-1.5">
           <Link
             href={`/project/${project.id}`}
-            className="font-mono text-base font-bold text-text-primary group-hover:text-brand-orange transition-colors truncate"
+            className="font-mono text-lg font-bold text-text-primary group-hover:text-brand-orange transition-colors truncate"
           >
             {project.title}
           </Link>
           <StatusBadge status={project.status} />
           {project.isBoosted && (
-            <span className="text-[8px] font-mono text-brand-orange font-bold uppercase tracking-widest bg-brand-orange/10 border border-brand-orange/20 px-1.5 py-0.5 rounded">
+            <span className="text-[10px] font-mono text-brand-orange font-bold uppercase tracking-widest bg-brand-orange/10 border border-brand-orange/20 px-2 py-0.5 rounded">
               BOOSTED
             </span>
           )}
           {project.user.plan === "FOUNDER" && (
-            <span className="text-[8px] font-mono text-gold font-bold uppercase tracking-widest bg-gold/10 border border-gold/20 px-1.5 py-0.5 rounded">
+            <span className="text-[10px] font-mono text-gold font-bold uppercase tracking-widest bg-gold/10 border border-gold/20 px-2 py-0.5 rounded">
               FOUNDER
             </span>
           )}
@@ -97,24 +97,24 @@ export function FeedRow({ rank, project, hasVoted = false }: FeedRowProps) {
 
         <Link
           href={`/project/${project.id}`}
-          className="block text-xs text-text-secondary leading-relaxed mb-3 line-clamp-2"
+          className="block text-sm text-text-secondary leading-relaxed mb-3.5 line-clamp-2"
         >
           {project.tagline}
         </Link>
 
         {/* Metadata Footer */}
-        <div className="flex flex-wrap items-center gap-3 text-[10px] font-mono text-text-muted">
+        <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-text-muted">
           <span className="text-text-secondary hover:text-brand-orange transition-colors">
             @{project.user.username}
           </span>
           <span className="text-border-strong select-none">•</span>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-1.5">
             {project.tags.slice(0, 2).map((t) => (
               <span
                 key={t}
-                className="bg-rock-3 border border-border px-1.5 py-0.5 rounded-[2px] text-text-muted uppercase text-[9px]"
+                className="bg-rock-3 border border-border px-2 py-0.5 rounded-[2px] text-text-muted uppercase text-[10.5px]"
               >
                 {t}
               </span>
@@ -122,7 +122,7 @@ export function FeedRow({ rank, project, hasVoted = false }: FeedRowProps) {
             {project.toolsUsed.slice(0, 2).map((tool) => (
               <span
                 key={tool}
-                className="bg-brand-orange/5 border border-brand-orange/10 px-1.5 py-0.5 rounded-[2px] text-text-secondary text-[9px]"
+                className="bg-brand-orange/5 border border-brand-orange/10 px-2 py-0.5 rounded-[2px] text-text-secondary text-[10.5px]"
               >
                 {tool}
               </span>
@@ -133,8 +133,8 @@ export function FeedRow({ rank, project, hasVoted = false }: FeedRowProps) {
           {isBuilding && (
             <>
               <span className="text-border-strong select-none">•</span>
-              <div className="flex items-center gap-1">
-                <span className="uppercase text-[9px] text-text-muted">Clock:</span>
+              <div className="flex items-center gap-1.5">
+                <span className="uppercase text-[10.5px] text-text-muted">Clock:</span>
                 <CountdownTimer deadlineAt={project.deadlineAt} variant="small" />
               </div>
             </>

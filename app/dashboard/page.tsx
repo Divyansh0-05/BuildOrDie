@@ -39,53 +39,53 @@ export default async function DashboardPage() {
   const shipRate = totalBuilds === 0 ? 0 : Math.round((user.totalShipped / totalBuilds) * 100);
 
   return (
-    <main className="min-h-screen bg-bg-primary px-6 py-12 text-text-primary pb-20 select-none">
-      <div className="mx-auto max-w-6xl space-y-6">
+    <main className="min-h-screen bg-bg-primary px-8 py-14 text-text-primary pb-24 select-none">
+      <div className="mx-auto max-w-6xl space-y-7">
         <SectionLabel label="YOUR COMMAND CENTER" />
 
         {/* Dashboard Grid */}
-        <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
+        <div className="grid gap-10 lg:grid-cols-[300px_1fr]">
           {/* Sidebar */}
-          <div className="space-y-4">
+          <div className="space-y-5">
             {/* Profile Panel */}
-            <StoneCard className="p-5 text-center bg-rock select-none">
+            <StoneCard className="p-6 text-center bg-rock select-none">
               <BuilderAvatar
                 displayName={user.displayName}
                 xHandle={user.xHandle}
-                size={56}
-                className="mx-auto mb-3"
+                size={70}
+                className="mx-auto mb-4"
               />
-              <div className="font-mono text-xs font-bold text-text-primary flex items-center justify-center gap-1">
+              <div className="font-mono text-sm font-bold text-text-primary flex items-center justify-center gap-1.5">
                 <span>{user.displayName}</span>
                 {user.plan === "FOUNDER" && <FounderBadge />}
               </div>
-              <div className="text-[10px] text-text-muted font-mono leading-none mt-1.5">
+              <div className="text-xs text-text-muted font-mono leading-none mt-2 font-bold">
                 @{user.username} {user.plan === "FOUNDER" ? "· ⚡ FOUNDER" : ""}
               </div>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-3 gap-1.5 mt-5">
-                <div className="bg-surface border border-border p-2 rounded-sm text-center">
-                  <div className="font-mono text-xs font-bold text-text-primary leading-none mb-1">
+              <div className="grid grid-cols-3 gap-2 mt-6">
+                <div className="bg-surface border border-border p-2.5 rounded-sm text-center">
+                  <div className="font-mono text-sm font-bold text-text-primary leading-none mb-1">
                     {user.totalShipped}
                   </div>
-                  <div className="text-[7px] text-text-muted font-mono uppercase tracking-wider leading-none">
+                  <div className="text-[9px] text-text-muted font-mono uppercase tracking-wider leading-none font-bold">
                     shipped
                   </div>
                 </div>
-                <div className="bg-surface border border-border p-2 rounded-sm text-center">
-                  <div className="font-mono text-xs font-bold text-text-primary leading-none mb-1">
+                <div className="bg-surface border border-border p-2.5 rounded-sm text-center">
+                  <div className="font-mono text-sm font-bold text-text-primary leading-none mb-1">
                     {user.totalKicked}
                   </div>
-                  <div className="text-[7px] text-text-muted font-mono uppercase tracking-wider leading-none">
+                  <div className="text-[9px] text-text-muted font-mono uppercase tracking-wider leading-none font-bold">
                     kicked
                   </div>
                 </div>
-                <div className="bg-surface border border-border p-2 rounded-sm text-center">
-                  <div className="font-mono text-xs font-bold text-brand-orange leading-none mb-1">
+                <div className="bg-surface border border-border p-2.5 rounded-sm text-center">
+                  <div className="font-mono text-sm font-bold text-brand-orange leading-none mb-1">
                     {shipRate}%
                   </div>
-                  <div className="text-[7px] text-text-muted font-mono uppercase tracking-wider leading-none">
+                  <div className="text-[9px] text-text-muted font-mono uppercase tracking-wider leading-none font-bold">
                     rate
                   </div>
                 </div>
@@ -93,16 +93,16 @@ export default async function DashboardPage() {
             </StoneCard>
 
             {/* Navigation buttons/links */}
-            <div className="flex flex-col gap-1 font-mono text-[10px] font-bold text-text-muted uppercase">
-              <div className="px-3 py-2 border border-border bg-surface text-brand-orange rounded-sm flex justify-between items-center">
+            <div className="flex flex-col gap-1.5 font-mono text-xs font-bold text-text-muted uppercase">
+              <div className="px-4 py-2.5 border border-border bg-surface text-brand-orange rounded-sm flex justify-between items-center">
                 <span>ACTIVE IDEAS</span>
                 <span>({activeProjects.length})</span>
               </div>
-              <div className="px-3 py-2 border border-transparent hover:border-border rounded-sm flex justify-between items-center">
+              <div className="px-4 py-2.5 border border-transparent hover:border-border rounded-sm flex justify-between items-center">
                 <span>SHIPPED</span>
                 <span>({shippedProjects.length})</span>
               </div>
-              <div className="px-3 py-2 border border-transparent hover:border-border rounded-sm flex justify-between items-center">
+              <div className="px-4 py-2.5 border border-transparent hover:border-border rounded-sm flex justify-between items-center">
                 <span>KICKED</span>
                 <span>({kickedProjects.length})</span>
               </div>
@@ -110,49 +110,49 @@ export default async function DashboardPage() {
 
             <Link
               href="/submit"
-              className="block w-full bg-brand-orange hover:bg-brand-amber text-white font-mono font-bold text-xs uppercase tracking-wider text-center py-2.5 rounded transition-colors"
+              className="block w-full bg-brand-orange hover:bg-brand-amber text-white font-mono font-bold text-sm uppercase tracking-wider text-center py-3.5 rounded transition-colors"
             >
               + DECLARE NEW IDEA
             </Link>
           </div>
 
           {/* Main Dashboard Panel */}
-          <div className="space-y-6">
+          <div className="space-y-7">
             {/* Active Projects Console */}
-            <div className="space-y-3">
-              <h2 className="font-mono text-xs font-bold text-text-primary uppercase tracking-wider">
+            <div className="space-y-4">
+              <h2 className="font-mono text-sm font-bold text-text-primary uppercase tracking-wider">
                 {"// ACTIVE IDEAS"}
               </h2>
               {activeProjects.length === 0 ? (
-                <StoneCard className="p-8 text-center text-xs font-mono text-text-muted uppercase tracking-wider bg-surface/30">
+                <StoneCard className="p-10 text-center text-sm font-mono text-text-muted uppercase tracking-wider bg-surface/30 font-bold">
                   No active ideas. The clock is stopped. Click declare to start!
                 </StoneCard>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-5">
                   {activeProjects.map((project) => (
-                    <StoneCard key={project.id} variant="ember" className="p-5 bg-surface/40">
-                      <div className="flex items-start justify-between gap-4 mb-3">
+                    <StoneCard key={project.id} variant="ember" className="p-6.5 bg-surface/40">
+                      <div className="flex items-start justify-between gap-5 mb-3.5">
                         <div>
                           <Link
                             href={`/project/${project.id}`}
-                            className="font-mono text-sm font-bold text-text-primary hover:text-brand-orange transition-colors"
+                            className="font-mono text-base font-bold text-text-primary hover:text-brand-orange transition-colors"
                           >
                             {project.title}
                           </Link>
-                          <p className="text-[10px] text-text-secondary leading-normal mt-1 max-w-xl">
+                          <p className="text-xs text-text-secondary leading-relaxed mt-1.5 max-w-xl">
                             {project.tagline}
                           </p>
                         </div>
                         <div className="flex gap-2">
                           <Link
                             href={`/project/${project.id}`}
-                            className="font-mono text-[9px] font-bold tracking-wider px-2 py-1 border border-border text-text-secondary hover:text-text-primary hover:border-text-muted rounded transition-all bg-rock-2"
+                            className="font-mono text-[11px] font-bold tracking-wider px-3 py-1.5 border border-border text-text-secondary hover:text-text-primary hover:border-text-muted rounded transition-all bg-rock-2"
                           >
                             VIEW
                           </Link>
                           <Link
                             href={`/project/${project.id}`}
-                            className="font-mono text-[9px] font-bold tracking-wider px-2 py-1 bg-brand-orange text-white hover:bg-brand-amber rounded transition-all"
+                            className="font-mono text-[11px] font-bold tracking-wider px-3 py-1.5 bg-brand-orange text-white hover:bg-brand-amber rounded transition-all"
                           >
                             LAUNCH ↑
                           </Link>
@@ -160,7 +160,7 @@ export default async function DashboardPage() {
                       </div>
 
                       {/* Display a high prominence timer on the dashboard */}
-                      <div className="mt-4">
+                      <div className="mt-5">
                         <CountdownTimer
                           deadlineAt={project.deadlineAt.toISOString()}
                           ideaDeclaredAt={project.ideaDeclaredAt.toISOString()}
@@ -173,28 +173,28 @@ export default async function DashboardPage() {
             </div>
 
             {/* Shipped Projects List */}
-            <div className="space-y-3">
-              <h2 className="font-mono text-xs font-bold text-text-primary uppercase tracking-wider">
+            <div className="space-y-4">
+              <h2 className="font-mono text-sm font-bold text-text-primary uppercase tracking-wider">
                 {"// SHIPPED PROJECTS"}
               </h2>
               {shippedProjects.length === 0 ? (
-                <StoneCard className="p-6 text-center text-xs font-mono text-text-muted uppercase tracking-wider bg-surface/20">
+                <StoneCard className="p-8 text-center text-sm font-mono text-text-muted uppercase tracking-wider bg-surface/20 font-bold">
                   You haven&apos;t shipped anything yet. Build and defeat the cliff!
                 </StoneCard>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {shippedProjects.map((project) => (
-                    <StoneCard key={project.id} className="p-4 bg-surface/30">
-                      <div className="flex items-center justify-between gap-4">
+                    <StoneCard key={project.id} className="p-5.5 bg-surface/30">
+                      <div className="flex items-center justify-between gap-5">
                         <div>
                           <Link
                             href={`/project/${project.id}`}
-                            className="font-mono text-xs font-bold text-text-primary hover:text-brand-orange transition-colors"
+                            className="font-mono text-sm font-bold text-text-primary hover:text-brand-orange transition-colors"
                           >
                             {project.title}
                           </Link>
-                          <div className="flex items-center gap-2 text-[9px] font-mono text-text-muted mt-1">
-                            <span className="bg-brand-green/10 border border-brand-green/30 text-brand-green px-1 py-0.5 rounded text-[8px] font-bold">
+                          <div className="flex items-center gap-2.5 text-[11px] font-mono text-text-muted mt-1.5 font-bold">
+                            <span className="bg-brand-green/10 border border-brand-green/30 text-brand-green px-2 py-0.5 rounded text-[10px] font-bold">
                               SHIPPED
                             </span>
                             <span>•</span>
@@ -206,13 +206,13 @@ export default async function DashboardPage() {
                         <div className="flex gap-2">
                           <Link
                             href={`/project/${project.id}`}
-                            className="font-mono text-[9px] font-bold tracking-wider px-2 py-1 border border-border text-text-secondary hover:text-text-primary hover:border-text-muted rounded bg-rock-2"
+                            className="font-mono text-[11px] font-bold tracking-wider px-3 py-1.5 border border-border text-text-secondary hover:text-text-primary hover:border-text-muted rounded bg-rock-2"
                           >
                             VIEW
                           </Link>
                           <Link
                             href="/passes"
-                            className="font-mono text-[9px] font-bold tracking-wider px-2 py-1 border border-brand-orange text-brand-orange hover:bg-brand-orange/5 rounded"
+                            className="font-mono text-[11px] font-bold tracking-wider px-3 py-1.5 border border-brand-orange text-brand-orange hover:bg-brand-orange/5 rounded"
                           >
                             BOOST
                           </Link>
@@ -225,28 +225,28 @@ export default async function DashboardPage() {
             </div>
 
             {/* Kicked Projects List */}
-            <div className="space-y-3">
-              <h2 className="font-mono text-xs font-bold text-text-primary uppercase tracking-wider">
+            <div className="space-y-4">
+              <h2 className="font-mono text-sm font-bold text-text-primary uppercase tracking-wider">
                 {"// KICKED PROJECTS"}
               </h2>
               {kickedProjects.length === 0 ? (
-                <StoneCard className="p-6 text-center text-xs font-mono text-text-muted uppercase tracking-wider bg-surface/10 border-dashed">
+                <StoneCard className="p-8 text-center text-sm font-mono text-text-muted uppercase tracking-wider bg-surface/10 border-dashed font-bold">
                   No failures. Your line remains unbroken.
                 </StoneCard>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-2.5">
                   {kickedProjects.map((project) => (
-                    <StoneCard key={project.id} className="p-4 bg-surface/20 opacity-60">
-                      <div className="flex items-center justify-between gap-4">
+                    <StoneCard key={project.id} className="p-5.5 bg-surface/20 opacity-60">
+                      <div className="flex items-center justify-between gap-5">
                         <div>
                           <Link
                             href={`/project/${project.id}`}
-                            className="font-mono text-xs font-bold text-text-primary hover:text-brand-orange transition-colors"
+                            className="font-mono text-sm font-bold text-text-primary hover:text-brand-orange transition-colors"
                           >
                             {project.title}
                           </Link>
-                          <div className="flex items-center gap-2 text-[9px] font-mono text-text-muted mt-1">
-                            <span className="bg-danger/10 border border-danger/30 text-danger px-1 py-0.5 rounded text-[8px] font-bold">
+                          <div className="flex items-center gap-2.5 text-[11px] font-mono text-text-muted mt-1.5 font-bold">
+                            <span className="bg-danger/10 border border-danger/30 text-danger px-2 py-0.5 rounded text-[10px] font-bold">
                               KICKED
                             </span>
                             <span>•</span>
@@ -255,7 +255,7 @@ export default async function DashboardPage() {
                         </div>
                         <Link
                           href={`/project/${project.id}`}
-                          className="font-mono text-[9px] font-bold tracking-wider px-2 py-1 border border-border text-text-secondary hover:text-text-primary hover:border-text-muted rounded bg-rock-2"
+                          className="font-mono text-[11px] font-bold tracking-wider px-3 py-1.5 border border-border text-text-secondary hover:text-text-primary hover:border-text-muted rounded bg-rock-2"
                         >
                           VIEW
                         </Link>

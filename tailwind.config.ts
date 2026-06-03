@@ -21,9 +21,9 @@ const config: Config = {
         "brand-orange": "#FF5500", // ember
         "brand-amber": "#FF8000", // ember-2
         "brand-green": "#3A5C3E", // moss
-        "text-primary": "#D4C4A8", // bone
-        "text-secondary": "#9A8870", // bone-2
-        "text-muted": "#5C4E3A", // bone-3
+        "text-primary": "#F3EDE2", // bone (high-contrast cream)
+        "text-secondary": "#C4B59F", // bone-2 (readable secondary sand)
+        "text-muted": "#8A7860", // bone-3 (accessible metadata gray-gold)
         "text-dim": "#332A1F", // bone-4
 
         // Exact mockup variables
@@ -35,9 +35,9 @@ const config: Config = {
         ember: "#FF5500",
         "ember-2": "#FF8000",
         "ember-3": "#FFAA00",
-        bone: "#D4C4A8",
-        "bone-2": "#9A8870",
-        "bone-3": "#5C4E3A",
+        bone: "#F3EDE2",
+        "bone-2": "#C4B59F",
+        "bone-3": "#8A7860",
         "bone-4": "#332A1F",
         moss: "#3A5C3E",
         gold: "#C8962A",

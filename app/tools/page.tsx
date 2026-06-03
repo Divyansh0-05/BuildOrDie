@@ -306,24 +306,24 @@ export default function ToolsPage() {
   });
 
   return (
-    <main className="min-h-screen bg-bg-primary px-6 py-12 text-text-primary pb-20 select-none">
-      <section className="mx-auto max-w-5xl space-y-8">
-        <div>
-          <h1 className="font-gothic text-4xl font-bold tracking-wide text-text-primary mb-1">
+    <main className="min-h-screen bg-bg-primary px-8 py-14 text-text-primary pb-24 select-none">
+      <section className="mx-auto max-w-5xl space-y-10">
+        <div className="space-y-1.5">
+          <h1 className="font-gothic text-5xl font-bold tracking-wide text-text-primary mb-1">
             The Builder&apos;s Forge
           </h1>
-          <p className="font-mono text-[10px] text-text-muted uppercase tracking-wider">
+          <p className="font-mono text-xs text-text-muted uppercase tracking-wider font-bold">
             {"// CURATED TOOLS TO SHIP IN 4 DAYS — STACK DISCOVERY FOR INDIE BUILDERS"}
           </p>
         </div>
 
         {/* Filter Pills */}
-        <div className="flex flex-wrap gap-2 select-none">
+        <div className="flex flex-wrap gap-2.5 select-none">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`font-mono text-[9px] font-bold tracking-wider px-3 py-1.5 border rounded-sm transition-all uppercase cursor-pointer ${
+              className={`font-mono text-[11px] font-bold tracking-wider px-4 py-2 border rounded-sm transition-all uppercase cursor-pointer ${
                 selectedCategory === cat
                   ? "border-brand-orange text-brand-orange bg-brand-orange/5"
                   : "border-border text-text-muted hover:border-text-secondary hover:text-text-secondary"
@@ -335,49 +335,49 @@ export default function ToolsPage() {
         </div>
 
         {/* Search */}
-        <div className="max-w-md">
+        <div className="max-w-lg">
           <input
             type="text"
             placeholder="SEARCH THE FORGE..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full font-mono text-xs border border-border bg-surface px-4 py-2.5 text-text-primary placeholder-text-muted outline-none focus:border-text-muted transition-colors rounded-sm"
+            className="w-full font-mono text-sm border border-border bg-surface px-5 py-3 text-text-primary placeholder-text-muted outline-none focus:border-text-muted transition-colors rounded-sm"
           />
         </div>
 
         {/* Tools Grid */}
         {filteredTools.length === 0 ? (
-          <div className="border border-dashed border-border p-12 text-center text-xs font-mono text-text-muted uppercase tracking-wider">
+          <div className="border border-dashed border-border p-12 text-center text-sm font-mono text-text-muted uppercase tracking-wider font-bold">
             No tools found in the forge.
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filteredTools.map((tool) => (
               <StoneCard
                 key={tool.name}
-                className="p-5 flex flex-col justify-between hover:border-text-muted transition-all duration-200"
+                className="p-6.5 flex flex-col justify-between hover:border-text-muted transition-all duration-200"
               >
                 <div>
-                  <div className="flex items-center gap-2 mb-2 select-none">
-                    <span className="text-xl leading-none">{tool.icon}</span>
-                    <h3 className="font-mono text-xs font-bold text-text-primary">
+                  <div className="flex items-center gap-2.5 mb-2.5 select-none">
+                    <span className="text-2xl leading-none">{tool.icon}</span>
+                    <h3 className="font-mono text-sm font-bold text-text-primary">
                       {tool.name}
                     </h3>
                   </div>
-                  <p className="text-[10px] text-text-secondary leading-normal mb-4">
+                  <p className="text-xs text-text-secondary leading-relaxed mb-4.5">
                     {tool.description}
                   </p>
                 </div>
 
-                <div className="space-y-3 pt-3 border-t border-border/40 mt-auto">
-                  <div className="font-mono text-[8px] text-brand-orange font-bold uppercase tracking-wide">
+                <div className="space-y-3.5 pt-3.5 border-t border-border/40 mt-auto">
+                  <div className="font-mono text-[10.5px] text-brand-orange font-bold uppercase tracking-wide">
                     {tool.usage}
                   </div>
                   <a
                     href={tool.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full py-2 border border-border text-center text-text-muted hover:text-brand-orange hover:border-brand-orange hover:bg-brand-orange/5 font-mono text-[9px] font-bold uppercase tracking-wider rounded-sm transition-all"
+                    className="block w-full py-2.5 border border-border text-center text-text-muted hover:text-brand-orange hover:border-brand-orange hover:bg-brand-orange/5 font-mono text-xs font-bold uppercase tracking-wider rounded-sm transition-all"
                   >
                     USE THIS TOOL →
                   </a>

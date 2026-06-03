@@ -87,19 +87,19 @@ export default function PassesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-bg-primary px-6 py-12 text-text-primary pb-20 select-none">
-      <section className="mx-auto max-w-5xl space-y-8">
-        <div>
-          <h1 className="font-gothic text-4xl font-bold tracking-wide text-text-primary mb-1">
+    <main className="min-h-screen bg-bg-primary px-8 py-14 text-text-primary pb-24 select-none">
+      <section className="mx-auto max-w-5xl space-y-10">
+        <div className="space-y-1.5">
+          <h1 className="font-gothic text-5xl font-bold tracking-wide text-text-primary mb-1">
             Sacred Offerings
           </h1>
-          <p className="font-mono text-[10px] text-text-muted uppercase tracking-wider">
+          <p className="font-mono text-xs text-text-muted uppercase tracking-wider font-bold">
             {"// ONE-TIME PAYMENTS. NO SUBSCRIPTIONS. NO MONTHLY CHARGES. EVER."}
           </p>
         </div>
 
         {/* Passes card Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
             <PassCard
               key={product.name}
@@ -114,7 +114,7 @@ export default function PassesPage() {
           ))}
         </div>
 
-        <div className="font-mono text-[9px] text-text-muted text-center uppercase tracking-wider pt-6">
+        <div className="font-mono text-[11.5px] text-text-muted text-center uppercase tracking-wider pt-8 font-bold">
           All payments processed by Dodo Payments • No subscriptions • Lifetime deals are permanent offerings
         </div>
       </section>

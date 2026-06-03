@@ -177,13 +177,13 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
   }
 
   return (
-    <main className="min-h-screen bg-bg-primary text-text-primary pb-16">
+    <main className="min-h-screen bg-bg-primary text-text-primary pb-20">
       {/* ─── LIVE TICKER ─── */}
-      <div className="bg-surface border-b border-border py-2 px-6 overflow-hidden select-none">
+      <div className="bg-surface border-b border-border py-3 px-8 overflow-hidden select-none">
         <div className="mx-auto max-w-6xl flex items-center justify-between gap-6">
-          <div className="flex items-center gap-6 overflow-x-auto whitespace-nowrap scrollbar-none py-0.5 text-[10px] font-mono text-text-secondary w-full">
+          <div className="flex items-center gap-6 overflow-x-auto whitespace-nowrap scrollbar-none py-0.5 text-xs font-mono text-text-secondary w-full">
             {tickerItems.map((item, index) => (
-              <div key={index} className="flex items-center gap-6 shrink-0">
+              <div key={index} className="flex items-center gap-6 shrink-0 font-bold">
                 <span>{item}</span>
                 {index < tickerItems.length - 1 && <span className="text-border-strong">•</span>}
               </div>
@@ -192,58 +192,58 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
         </div>
       </div>
 
-      <section className="mx-auto max-w-6xl px-6 py-8 space-y-8">
+      <section className="mx-auto max-w-6xl px-8 py-10 space-y-10">
         {/* ─── HERO & TRIBE GRID ─── */}
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
           {/* Hero text */}
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold text-brand-orange uppercase bg-brand-orange/10 border border-brand-orange/20 px-2.5 py-1 rounded">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-ping" />
+          <div className="space-y-7">
+            <div className="inline-flex items-center gap-2 font-mono text-xs font-bold text-brand-orange uppercase bg-brand-orange/10 border border-brand-orange/20 px-3.5 py-1.5 rounded">
+              <span className="w-2.5 h-2.5 rounded-full bg-brand-orange animate-ping" />
               {totalBuilding} BUILDERS IN THE TRIBE RIGHT NOW
             </div>
 
-            <div className="space-y-2">
-              <h1 className="font-gothic text-6xl sm:text-7xl leading-none text-text-primary tracking-tight">
+            <div className="space-y-3">
+              <h1 className="font-gothic text-7xl sm:text-8xl leading-none text-text-primary tracking-tight">
                 Build<br />
                 Or<br />
                 <span className="bg-gradient-to-r from-brand-orange to-brand-amber bg-clip-text text-transparent italic">
                   Die.
                 </span>
               </h1>
-              <p className="font-mono text-xs text-text-secondary italic uppercase tracking-wider">
+              <p className="font-mono text-sm text-text-secondary italic uppercase tracking-wider font-bold">
                 {"// four days. one idea. ship or fall from the cliff."}
               </p>
             </div>
 
             {/* Quote scroll */}
-            <div className="border-l-2 border-border pl-4 py-1.5 space-y-2.5 select-none">
-              <div className="font-mono text-xs text-text-primary leading-relaxed flex items-start gap-2">
-                <span className="text-brand-orange">›</span>
+            <div className="border-l-2 border-border pl-5 py-2.5 space-y-3.5 select-none">
+              <div className="font-mono text-sm text-text-primary leading-relaxed flex items-start gap-2.5">
+                <span className="text-brand-orange font-bold">›</span>
                 <span>You have an idea. It has been sitting in your head for months.</span>
               </div>
-              <div className="font-mono text-xs text-text-secondary leading-relaxed flex items-start gap-2">
-                <span className="text-brand-orange">›</span>
+              <div className="font-mono text-sm text-text-secondary leading-relaxed flex items-start gap-2.5">
+                <span className="text-brand-orange font-bold">›</span>
                 <span>Declare it publicly. The clock starts. You cannot take it back.</span>
               </div>
-              <div className="font-mono text-xs text-text-secondary leading-relaxed flex items-start gap-2">
-                <span className="text-brand-orange">›</span>
+              <div className="font-mono text-sm text-text-secondary leading-relaxed flex items-start gap-2.5">
+                <span className="text-brand-orange font-bold">›</span>
                 <span>Launch in 4 days or get kicked. Build fast, reach real people, or crash and move on.</span>
               </div>
-              <div className="font-mono text-xs text-text-muted leading-relaxed flex items-start gap-2">
-                <span className="text-brand-orange">›</span>
+              <div className="font-mono text-sm text-text-muted leading-relaxed flex items-start gap-2.5">
+                <span className="text-brand-orange font-bold">›</span>
                 <span>Either way — you learn faster than anyone still sitting by the cave thinking about it.</span>
               </div>
             </div>
 
             {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-wrap items-center gap-5">
               <Link
                 href="/submit"
-                className="bg-brand-orange border border-brand-orange/45 px-5 py-3 font-mono font-bold text-xs text-white uppercase tracking-wider transition-all hover:bg-brand-amber shadow-[0_0_15px_rgba(255,85,0,0.15)]"
+                className="bg-brand-orange border border-brand-orange/45 px-6.5 py-4 font-mono font-bold text-sm text-white uppercase tracking-wider transition-all hover:bg-brand-amber shadow-[0_0_15px_rgba(255,85,0,0.15)] rounded-[2px]"
               >
                 ⚒ DECLARE YOUR IDEA — START THE CLOCK
               </Link>
-              <span className="font-mono text-[9px] text-text-muted select-none uppercase tracking-wider">
+              <span className="font-mono text-[11px] text-text-muted select-none uppercase tracking-wider font-bold">
                 {"// no subscriptions. no mercy. just build."}
               </span>
             </div>
@@ -271,30 +271,30 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
 
         {/* ─── BUILDERS ABOUT TO DIE SECTION ─── */}
         {buildersAboutToDie.length > 0 && (
-          <StoneCard variant="ember" className="p-5 bg-danger/[0.02]">
-            <div className="flex items-center gap-2 mb-3.5 select-none">
-              <span className="text-base">💀</span>
-              <span className="font-mono text-[10px] font-black tracking-widest text-danger uppercase animate-pulse">
+          <StoneCard variant="ember" className="p-6 bg-danger/[0.02]">
+            <div className="flex items-center gap-2.5 mb-4 select-none">
+              <span className="text-lg">💀</span>
+              <span className="font-mono text-[12px] font-black tracking-widest text-danger uppercase animate-pulse">
                 BUILDERS ON THE EDGE OF THE CLIFF — LESS THAN 12 HOURS REMAINING
               </span>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
               {buildersAboutToDie.map((project) => (
                 <Link
                   key={project.id}
                   href={`/project/${project.id}`}
-                  className="bg-rock border border-border p-3.5 hover:border-danger transition-colors rounded flex flex-col justify-between"
+                  className="bg-rock border border-border p-5 hover:border-danger transition-colors rounded flex flex-col justify-between"
                 >
                   <div>
-                    <div className="font-mono text-xs font-bold text-text-primary truncate mb-1">
+                    <div className="font-mono text-sm font-bold text-text-primary truncate mb-1">
                       {project.title}
                     </div>
-                    <p className="text-[10px] text-text-secondary line-clamp-2 leading-normal mb-3">
+                    <p className="text-xs text-text-secondary line-clamp-2 leading-normal mb-3.5">
                       {project.tagline}
                     </p>
                   </div>
-                  <div className="flex items-center justify-between pt-2 border-t border-border/40 mt-auto">
-                    <span className="text-[9px] font-mono text-text-muted truncate">
+                  <div className="flex items-center justify-between pt-2.5 border-t border-border/40 mt-auto">
+                    <span className="text-[11px] font-mono text-text-muted truncate font-bold">
                       @{project.user.username}
                     </span>
                     <CountdownTimer deadlineAt={project.deadlineAt.toISOString()} variant="small" />
@@ -315,7 +315,7 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
         />
 
         {/* ─── MAIN FEED ─── */}
-        <div className="space-y-6">
+        <div className="space-y-7">
           <SectionLabel label={`BUILDERS AT THE ROCK FACE — ${totalBuilding} ACTIVE`} />
           <ProjectFeed
             initialProjects={projects.map((project) => ({
@@ -329,9 +329,9 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
         </div>
 
         {/* ─── RECENT CASUALTIES SECTION (DEATH MOUNTAIN REPLACEMENT) ─── */}
-        <StoneCard className="p-8 text-center bg-rock-2 border-border/80">
+        <StoneCard className="p-10 text-center bg-rock-2 border-border/80">
           {/* Small ASCII art container */}
-          <div className="font-mono text-[9px] text-danger/60 leading-none select-none mb-3 opacity-60">
+          <div className="font-mono text-[11px] text-danger/60 leading-none select-none mb-3.5 opacity-60">
             {"        /\\"}
             <br />
             {"       /  \\"}
@@ -345,33 +345,33 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
             {"   ───────────"}
           </div>
 
-          <div className="font-gothic text-2xl text-danger mb-1 tracking-wider">
+          <div className="font-gothic text-3xl text-danger mb-1 tracking-wider">
             The Cliff Claims Another Builder
           </div>
-          <p className="font-mono text-[10px] text-text-muted uppercase tracking-wider mb-6">
+          <p className="font-mono text-xs text-text-muted uppercase tracking-wider mb-8 font-bold">
             {"// recent casualties who failed to ship on time"}
           </p>
 
           {recentCasualties.length === 0 ? (
-            <p className="font-mono text-[10px] text-text-muted uppercase">
+            <p className="font-mono text-xs text-text-muted uppercase font-bold">
               No builders have fallen to the cliff recently. The line holds.
             </p>
           ) : (
-            <div className="mx-auto max-w-2xl grid gap-3 sm:grid-cols-3">
+            <div className="mx-auto max-w-2xl grid gap-4 sm:grid-cols-3">
               {recentCasualties.map((project) => (
                 <div
                   key={project.id}
-                  className="bg-rock border border-border p-3 rounded text-left flex flex-col justify-between"
+                  className="bg-rock border border-border p-4.5 rounded text-left flex flex-col justify-between"
                 >
                   <div>
-                    <div className="font-mono text-xs font-bold text-text-primary truncate mb-1">
+                    <div className="font-mono text-sm font-bold text-text-primary truncate mb-1">
                       {project.title}
                     </div>
-                    <p className="text-[10px] text-text-muted line-clamp-2 leading-normal mb-2">
+                    <p className="text-xs text-text-muted line-clamp-2 leading-normal mb-2.5">
                       {project.tagline}
                     </p>
                   </div>
-                  <div className="font-mono text-[8px] text-danger/80 mt-auto pt-1.5 border-t border-border/30">
+                  <div className="font-mono text-[10px] text-danger/80 mt-auto pt-2 border-t border-border/30 font-bold">
                     KICKED • @{project.user.username}
                   </div>
                 </div>

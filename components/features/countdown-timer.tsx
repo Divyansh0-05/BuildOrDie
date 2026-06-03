@@ -122,50 +122,50 @@ export function CountdownTimer({
   }
 
   return (
-    <div className="bg-rock border border-border rounded p-5 select-none relative">
+    <div className="bg-rock border border-border rounded p-6 select-none relative">
       {/* Top indicator */}
-      <div className="flex items-center justify-between mb-3.5">
-        <span className="text-[9px] font-mono text-text-muted font-bold tracking-[0.1em] uppercase">
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-[11.5px] font-mono text-text-muted font-bold tracking-[0.1em] uppercase">
           {"// TIME REMAINING TO SHIP OR DIE"}
         </span>
         {isCritical && !isExpired && (
-          <span className="text-[8px] font-mono text-brand-orange font-black tracking-widest uppercase animate-pulse border border-brand-orange/30 bg-brand-orange/10 px-1.5 py-0.5 rounded">
+          <span className="text-[10px] font-mono text-brand-orange font-black tracking-widest uppercase animate-pulse border border-brand-orange/30 bg-brand-orange/10 px-2 py-0.5 rounded">
             CRITICAL
           </span>
         )}
       </div>
 
       {/* Digits Display */}
-      <div className="flex items-end gap-1.5">
+      <div className="flex items-end gap-2">
         <div className="flex flex-col items-center">
-          <div className={cn("font-mono text-4xl sm:text-5xl font-black tracking-tighter leading-none", colorClass)}>
+          <div className={cn("font-mono text-5xl sm:text-6xl font-black tracking-tighter leading-none", colorClass)}>
             {pad(hours)}
           </div>
-          <div className="text-[8px] font-mono text-text-muted mt-1 uppercase tracking-wider">HRS</div>
+          <div className="text-[10.5px] font-mono text-text-muted mt-1.5 uppercase tracking-wider font-bold">HRS</div>
         </div>
 
-        <div className="font-mono text-3xl sm:text-4xl text-border-strong pb-3 leading-none select-none">:</div>
+        <div className="font-mono text-4xl sm:text-5xl text-border-strong pb-4 leading-none select-none">:</div>
 
         <div className="flex flex-col items-center">
-          <div className={cn("font-mono text-4xl sm:text-5xl font-black tracking-tighter leading-none", colorClass)}>
+          <div className={cn("font-mono text-5xl sm:text-6xl font-black tracking-tighter leading-none", colorClass)}>
             {pad(minutes)}
           </div>
-          <div className="text-[8px] font-mono text-text-muted mt-1 uppercase tracking-wider">MIN</div>
+          <div className="text-[10.5px] font-mono text-text-muted mt-1.5 uppercase tracking-wider font-bold">MIN</div>
         </div>
 
-        <div className="font-mono text-3xl sm:text-4xl text-border-strong pb-3 leading-none select-none">:</div>
+        <div className="font-mono text-4xl sm:text-5xl text-border-strong pb-4 leading-none select-none">:</div>
 
         <div className="flex flex-col items-center">
-          <div className={cn("font-mono text-4xl sm:text-5xl font-black tracking-tighter leading-none", colorClass)}>
+          <div className={cn("font-mono text-5xl sm:text-6xl font-black tracking-tighter leading-none", colorClass)}>
             {pad(seconds)}
           </div>
-          <div className="text-[8px] font-mono text-text-muted mt-1 uppercase tracking-wider">SEC</div>
+          <div className="text-[10.5px] font-mono text-text-muted mt-1.5 uppercase tracking-wider font-bold">SEC</div>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="mt-5">
-        <div className="w-full bg-border h-[3px] rounded-full overflow-hidden">
+      <div className="mt-6">
+        <div className="w-full bg-border h-1.5 rounded-full overflow-hidden">
           <div
             className={cn(
               "h-full rounded-full transition-all duration-1000 ease-out",
@@ -174,14 +174,14 @@ export function CountdownTimer({
             style={{ width: `${elapsedPercent}%` }}
           />
         </div>
-        <div className="flex justify-between items-center mt-2 text-[9px] font-mono text-text-muted font-medium">
+        <div className="flex justify-between items-center mt-2.5 text-[11.5px] font-mono text-text-muted font-bold">
           <span>{declaredText}</span>
           <span>{elapsedPercent.toFixed(0)}% elapsed</span>
         </div>
       </div>
 
       {/* Subtext */}
-      <div className="mt-4 text-[10px] font-mono text-text-muted italic leading-relaxed">
+      <div className="mt-5 text-xs font-mono text-text-muted italic leading-relaxed">
         {subtext}
       </div>
     </div>
