@@ -6,6 +6,7 @@ import { ensureLocalUser } from "@/lib/auth/local-user";
 import { scheduleProjectLifecycleEvents } from "@/lib/inngest/events";
 import { db } from "@/lib/db";
 import { validateCreateProjectInput } from "@/lib/projects/validation";
+import { sendEmail, ideaDeclaredEmail } from "@/lib/email";
 
 const fourDaysMs = 96 * 60 * 60 * 1000;
 
@@ -165,6 +166,22 @@ export async function POST(request: Request) {
       },
       { status: 202 },
     );
+  }
+
+  try {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    const projectUrl = `${appUrl}/project/${project.id}`;
+    const emailData = await ideaDeclaredEmail(
+      project.title,
+      project.deadlineAt.toLocaleString(),
+      projectUrl
+    );
+    await sendEmail({
+      to: user.email,
+      ...emailData,
+    });
+  } catch (emailError) {
+    console.error("Failed to send Idea Declared email:", emailError);
   }
 
   return NextResponse.json(project, { status: 201 });

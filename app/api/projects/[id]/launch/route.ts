@@ -4,6 +4,7 @@ import { ProjectStatus } from "@prisma/client";
 import { cancelProjectLifecycleEvents } from "@/lib/inngest/events";
 import { db } from "@/lib/db";
 import { validateHttpsUrl } from "@/lib/projects/validation";
+import { sendEmail, launchedEmail } from "@/lib/email";
 
 export async function PATCH(
   request: Request,
@@ -31,7 +32,7 @@ export async function PATCH(
 
   const project = await db.project.findUnique({
     where: { id: params.id },
-    include: { user: { select: { id: true, clerkId: true } } },
+    include: { user: { select: { id: true, clerkId: true, email: true } } },
   });
 
   if (!project) {
@@ -100,6 +101,27 @@ export async function PATCH(
     await cancelProjectLifecycleEvents(project.id);
   } catch (error) {
     console.error("Failed to emit project cancellation event", error);
+  }
+
+  try {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    const projectUrl = `${appUrl}/project/${project.id}`;
+    const cleanAppUrl = appUrl.replace(/^https?:\/\//, "");
+    const tweetText = `Just shipped ${project.title} on @BuildOrDie in 4 days. ${project.tagline} Check it out: ${cleanAppUrl}/project/${project.id} #buildinpublic #BuildOrDie`;
+    const shareUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+
+    const emailData = await launchedEmail(
+      project.title,
+      projectUrl,
+      shareUrl,
+      tweetText
+    );
+    await sendEmail({
+      to: project.user.email,
+      ...emailData,
+    });
+  } catch (emailError) {
+    console.error("Failed to send Launched email:", emailError);
   }
 
   return NextResponse.json(launchedProject);

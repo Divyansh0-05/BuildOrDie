@@ -1,4 +1,19 @@
 import { Resend } from "resend";
+import { render } from "@react-email/components";
+import React from "react";
+
+// Import email templates
+import { WelcomeEmail } from "@/emails/welcome";
+import { IdeaDeclaredEmail } from "@/emails/idea-declared";
+import { WarningEmail } from "@/emails/warning";
+import { GraceExtensionEmail } from "@/emails/grace-extension";
+import { KickedEmail } from "@/emails/kicked";
+import { LaunchedEmail } from "@/emails/launched";
+import { FeaturedEmail } from "@/emails/featured";
+import { FounderPassEmail } from "@/emails/founder-pass";
+import { BoostQueuedEmail } from "@/emails/boost-queued";
+import { BoostLiveEmail } from "@/emails/boost-live";
+import { InvestorInterestEmail } from "@/emails/investor-interest";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -24,63 +39,182 @@ export async function sendEmail({ to, subject, html, text }: SendEmailInput) {
   });
 }
 
-function cta(url: string, label: string) {
-  return `<p><a href="${url}" style="display:inline-block;background:#FF4D00;color:#080810;font-weight:700;padding:12px 16px;text-decoration:none">${label}</a></p>`;
+// Async template renderer helpers
+
+export async function welcomeEmail() {
+  const element = React.createElement(WelcomeEmail);
+  const html = await render(element);
+  const text = await render(element, { plainText: true });
+  return {
+    subject: "Welcome to BuildOrDie. Now build something.",
+    html,
+    text,
+  };
 }
 
-export function warningEmail(projectTitle: string, projectUrl: string) {
+export async function ideaDeclaredEmail(
+  projectTitle: string,
+  deadlineStr: string,
+  projectUrl: string
+) {
+  const element = React.createElement(IdeaDeclaredEmail, {
+    projectTitle,
+    deadlineStr,
+    projectUrl,
+  });
+  const html = await render(element);
+  const text = await render(element, { plainText: true });
+  return {
+    subject: "Clock started. 96 hours. Go.",
+    html,
+    text,
+  };
+}
+
+export async function warningEmail(projectTitle: string, projectUrl: string) {
+  const element = React.createElement(WarningEmail, {
+    projectTitle,
+    projectUrl,
+  });
+  const html = await render(element);
+  const text = await render(element, { plainText: true });
   return {
     subject: "6 hours left. Launch or get kicked.",
-    html: `<div style="background:#1A1A2E;color:#F0F0FF;padding:32px;font-family:Arial,sans-serif"><h1>6 HOURS LEFT</h1><p>${projectTitle} is almost out of time.</p>${cta(projectUrl, "LAUNCH NOW")}</div>`,
-    text: `6 HOURS LEFT\n${projectTitle} is almost out of time.\n${projectUrl}`,
+    html,
+    text,
   };
 }
 
-export function kickedEmail(projectTitle: string, appUrl: string) {
+export async function graceExtensionEmail(projectTitle: string, projectUrl: string) {
+  const element = React.createElement(GraceExtensionEmail, {
+    projectTitle,
+    projectUrl,
+  });
+  const html = await render(element);
+  const text = await render(element, { plainText: true });
+  return {
+    subject: "Founder grace unlocked. 6 more hours.",
+    html,
+    text,
+  };
+}
+
+export async function kickedEmail(projectTitle: string, appUrl: string) {
+  const submitUrl = `${appUrl}/submit`;
+  const element = React.createElement(KickedEmail, {
+    projectTitle,
+    submitUrl,
+  });
+  const html = await render(element);
+  const text = await render(element, { plainText: true });
   return {
     subject: "You got kicked. The clock won. Go again.",
-    html: `<div style="background:#1A1A2E;color:#F0F0FF;padding:32px;font-family:Arial,sans-serif"><h1>The clock won this round.</h1><p>${projectTitle} got kicked.</p>${cta(`${appUrl}/submit`, "DECLARE AGAIN")}</div>`,
-    text: `The clock won this round.\n${projectTitle} got kicked.\n${appUrl}/submit`,
+    html,
+    text,
   };
 }
 
-export function launchedEmail(projectTitle: string, projectUrl: string) {
+export async function launchedEmail(
+  projectTitle: string,
+  projectUrl: string,
+  shareUrl: string,
+  tweetText: string
+) {
+  const element = React.createElement(LaunchedEmail, {
+    projectTitle,
+    projectUrl,
+    shareUrl,
+    tweetText,
+  });
+  const html = await render(element);
+  const text = await render(element, { plainText: true });
   return {
     subject: "You shipped it. Now get votes. Share this.",
-    html: `<div style="background:#1A1A2E;color:#F0F0FF;padding:32px;font-family:Arial,sans-serif"><h1>You shipped it.</h1><p>${projectTitle} is live.</p>${cta(projectUrl, "VIEW PROJECT")}</div>`,
-    text: `You shipped it.\n${projectTitle} is live.\n${projectUrl}`,
+    html,
+    text,
   };
 }
 
-export function boostLiveEmail(projectTitle: string, projectUrl: string) {
+export async function boostLiveEmail(
+  projectTitle: string,
+  projectUrl: string,
+  durationDays = 7
+) {
+  const element = React.createElement(BoostLiveEmail, {
+    projectTitle,
+    durationDays,
+    projectUrl,
+  });
+  const html = await render(element);
+  const text = await render(element, { plainText: true });
   return {
     subject: "Your ad is live now. 7 days on the homepage.",
-    html: `<div style="background:#1A1A2E;color:#F0F0FF;padding:32px;font-family:Arial,sans-serif"><h1>Your ad is live now.</h1><p>${projectTitle} is boosted.</p>${cta(projectUrl, "VIEW PROJECT")}</div>`,
-    text: `Your ad is live now.\n${projectTitle} is boosted.\n${projectUrl}`,
+    html,
+    text,
   };
 }
 
-export function featuredEmail(projectTitle: string, projectUrl: string) {
+export async function featuredEmail(projectTitle: string, projectUrl: string) {
+  const element = React.createElement(FeaturedEmail, {
+    projectTitle,
+    projectUrl,
+  });
+  const html = await render(element);
+  const text = await render(element, { plainText: true });
   return {
     subject: "Your project is featured on BuildOrDie.",
-    html: `<div style="background:#1A1A2E;color:#F0F0FF;padding:32px;font-family:Arial,sans-serif"><h1>You made the strip.</h1><p>${projectTitle} is featured.</p>${cta(projectUrl, "VIEW PROJECT")}</div>`,
-    text: `You made the strip.\n${projectTitle} is featured.\n${projectUrl}`,
+    html,
+    text,
   };
 }
 
-export function founderPassEmail() {
+export async function founderPassEmail() {
+  const element = React.createElement(FounderPassEmail);
+  const html = await render(element);
+  const text = await render(element, { plainText: true });
   return {
     subject: "Founder Pass unlocked. You now have 2 ideas and a 6h safety net.",
-    html: `<div style="background:#1A1A2E;color:#F0F0FF;padding:32px;font-family:Arial,sans-serif"><h1>Founder Pass Unlocked</h1><p>Founder Pass unlocked. You now have 2 ideas and a 6h safety net.</p></div>`,
-    text: `Founder Pass unlocked. You now have 2 ideas and a 6h safety net.`,
+    html,
+    text,
   };
 }
 
-export function boostQueuedEmail(projectTitle: string, dateStr: string) {
+export async function boostQueuedEmail(
+  projectTitle: string,
+  dateStr: string,
+  projectUrl: string
+) {
+  const element = React.createElement(BoostQueuedEmail, {
+    projectTitle,
+    liveDateStr: dateStr,
+    projectUrl,
+  });
+  const html = await render(element);
+  const text = await render(element, { plainText: true });
   return {
     subject: `Boost confirmed. Your ad goes live on ${dateStr}.`,
-    html: `<div style="background:#1A1A2E;color:#F0F0FF;padding:32px;font-family:Arial,sans-serif"><h1>Boost Confirmed</h1><p>Your project "${projectTitle}" has been boosted. Your ad goes live on ${dateStr}.</p></div>`,
-    text: `Boost confirmed. Your project "${projectTitle}" has been boosted. Your ad goes live on ${dateStr}.`,
+    html,
+    text,
   };
 }
 
+export async function investorInterestEmail(
+  projectTitle: string,
+  investorName: string,
+  investorEmail: string,
+  builderName: string
+) {
+  const element = React.createElement(InvestorInterestEmail, {
+    projectTitle,
+    investorName,
+    investorEmail,
+    builderName,
+  });
+  const html = await render(element);
+  const text = await render(element, { plainText: true });
+  return {
+    subject: `An investor is interested in ${projectTitle}.`,
+    html,
+    text,
+  };
+}

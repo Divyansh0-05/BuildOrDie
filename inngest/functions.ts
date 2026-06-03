@@ -6,6 +6,7 @@ import {
   kickedEmail,
   sendEmail,
   warningEmail,
+  graceExtensionEmail,
 } from "@/lib/email";
 import { scheduleFinalKickEvent } from "@/lib/inngest/events";
 import { db } from "@/lib/db";
@@ -26,7 +27,7 @@ export async function handleSendWarning(projectId: string) {
     return { skipped: true, reason: "Project is not BUILDING." };
   }
 
-  const email = warningEmail(project.title, projectUrl(project.id));
+  const email = await warningEmail(project.title, projectUrl(project.id));
 
   await sendEmail({
     to: project.user.email,
@@ -60,13 +61,11 @@ export async function handleKickProject(projectId: string) {
   }
 
   if (project.user.plan === "FOUNDER") {
-    const email = warningEmail(project.title, projectUrl(project.id));
+    const email = await graceExtensionEmail(project.title, projectUrl(project.id));
 
     await sendEmail({
       to: project.user.email,
-      subject: "Founder grace unlocked. 6 more hours.",
-      html: email.html,
-      text: email.text,
+      ...email,
     });
     await scheduleFinalKickEvent(project.id, 6);
 
@@ -86,7 +85,7 @@ export async function handleKickProject(projectId: string) {
       },
     },
   });
-  const email = warningEmail(project.title, projectUrl(project.id));
+  const email = await warningEmail(project.title, projectUrl(project.id));
 
   await sendEmail({
     to: project.user.email,
@@ -129,7 +128,7 @@ export async function handleFinalKick(projectId: string) {
 
     return updated;
   });
-  const email = kickedEmail(project.title, appUrl);
+  const email = await kickedEmail(project.title, appUrl);
 
   await sendEmail({
     to: project.user.email,
@@ -148,7 +147,7 @@ export async function handleActivateBoostSlot(projectId: string) {
     },
     include: { user: true },
   });
-  const email = boostLiveEmail(project.title, projectUrl(project.id));
+  const email = await boostLiveEmail(project.title, projectUrl(project.id));
 
   await sendEmail({
     to: project.user.email,
@@ -221,8 +220,8 @@ export async function handleUpdateFeatured() {
   }
 
   await Promise.all(
-    newlyFeatured.map((project) => {
-      const email = featuredEmail(project.title, projectUrl(project.id));
+    newlyFeatured.map(async (project) => {
+      const email = await featuredEmail(project.title, projectUrl(project.id));
 
       return sendEmail({
         to: project.user.email,

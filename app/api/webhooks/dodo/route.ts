@@ -237,9 +237,10 @@ export async function POST(request: Request) {
         if (result?.success) {
             if (result.type === "founderPass") {
                 try {
+                    const emailData = await founderPassEmail();
                     await sendEmail({
                         to: result.email!,
-                        ...founderPassEmail(),
+                        ...emailData,
                     });
                 } catch (emailErr) {
                     console.error("Failed to send Founder Pass email", emailErr);
@@ -255,9 +256,16 @@ export async function POST(request: Request) {
                 }
 
                 try {
+                    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+                    const projectUrl = `${appUrl}/project/${result.projectId}`;
+                    const emailData = await boostQueuedEmail(
+                        result.projectTitle!,
+                        result.startsAt!.toLocaleString(),
+                        projectUrl
+                    );
                     await sendEmail({
                         to: result.email!,
-                        ...boostQueuedEmail(result.projectTitle!, result.startsAt!.toLocaleString()),
+                        ...emailData,
                     });
                 } catch (emailErr) {
                     console.error("Failed to send Boost Queued email", emailErr);

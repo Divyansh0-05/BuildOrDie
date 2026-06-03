@@ -1,6 +1,7 @@
 import { Webhook } from "svix";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { sendEmail, welcomeEmail } from "@/lib/email";
 
 type ClerkEmailAddress = {
   id: string;
@@ -102,6 +103,16 @@ export async function POST(request: Request) {
         deletedAt: null,
       },
     });
+
+    try {
+      const emailContent = await welcomeEmail();
+      await sendEmail({
+        to: email,
+        ...emailContent,
+      });
+    } catch (err) {
+      console.error("Failed to send Welcome email:", err);
+    }
   }
 
   if (event.type === "user.deleted") {
