@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=JetBrains+Mono:wght@400;500;700;800&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,18 +7,63 @@
 @layer base {
   :root {
     color-scheme: dark;
+    --rock: #120E0A;
+    --rock2: #1C1610;
+    --rock3: #251D14;
+    --rock4: #32271A;
+    --rock5: #3D3025;
+    --ember: #FF5500;
+    --ember2: #FF8000;
+    --ember3: #FFAA00;
+    --bone: #D4C4A8;
+    --bone2: #9A8870;
+    --bone3: #5C4E3A;
+    --bone4: #332A1F;
+    --moss: #3A5C3E;
+    --gold: #C8962A;
+    --danger: #CC2200;
   }
 
   * {
     @apply border-border;
+    box-sizing: border-box;
   }
 
   html {
     @apply bg-bg-primary text-text-primary;
+    background-color: var(--rock);
+    font-family: 'JetBrains Mono', monospace;
   }
 
   body {
     @apply min-h-screen bg-bg-primary text-text-primary antialiased;
+    background-color: var(--rock);
+    font-family: 'JetBrains Mono', monospace;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Cave texture noise */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Ember glow at bottom */
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 320px;
+    background: radial-gradient(ellipse 80% 100% at 50% 100%, rgba(255,85,0,.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
   }
 }
 
@@ -24,4 +71,18 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Custom scrollbar utility */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bone4);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--ember);
+    border-radius: 2px;
+  }
 }
+

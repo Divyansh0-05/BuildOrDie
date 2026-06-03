@@ -7,6 +7,8 @@ import { CountdownTimer } from "./countdown-timer";
 import { FounderBadge } from "./founder-badge";
 import { VoteButton } from "./vote-button";
 
+import { cn } from "@/lib/utils";
+
 interface ProjectCardProps {
   project: {
     id: string;
@@ -35,25 +37,25 @@ export function ProjectCard({ project, hasVoted = false }: ProjectCardProps) {
     switch (status) {
       case ProjectStatus.BUILDING:
         return (
-          <span className="bg-brand-orange/10 border border-brand-orange/30 text-brand-orange px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider font-mono">
+          <span className="bg-brand-orange/10 border border-brand-orange/30 text-brand-orange px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider font-mono">
             BUILDING
           </span>
         );
       case ProjectStatus.LAUNCHED:
         return (
-          <span className="bg-brand-green/10 border border-brand-green/30 text-brand-green px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider font-mono">
-            LAUNCHED
+          <span className="bg-brand-green/10 border border-brand-green/30 text-brand-green px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider font-mono">
+            SHIPPED
           </span>
         );
       case ProjectStatus.WARNED:
         return (
-          <span className="bg-brand-amber/10 border border-brand-amber/30 text-brand-amber px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider font-mono">
-            WARNED
+          <span className="bg-brand-amber/10 border border-brand-amber/30 text-brand-amber px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider font-mono">
+            AT THE CLIFF
           </span>
         );
       case ProjectStatus.KICKED:
         return (
-          <span className="bg-red-950/20 border border-red-900/30 text-red-500 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider font-mono">
+          <span className="bg-danger/10 border border-danger/30 text-danger px-2 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider font-mono">
             KICKED
           </span>
         );
@@ -66,7 +68,12 @@ export function ProjectCard({ project, hasVoted = false }: ProjectCardProps) {
     project.status === ProjectStatus.BUILDING || project.status === ProjectStatus.WARNED;
 
   return (
-    <div className="bg-surface border border-border hover:border-border-strong rounded-lg p-5 transition-all group flex flex-col justify-between relative">
+    <div
+      className={cn(
+        "bg-surface border border-border hover:border-text-muted rounded-md p-5 transition-all group flex flex-col justify-between relative select-none",
+        project.isBoosted && "border-t-2 border-t-brand-orange"
+      )}
+    >
       {/* Header Info */}
       <div>
         <div className="flex items-start justify-between gap-3 mb-4">

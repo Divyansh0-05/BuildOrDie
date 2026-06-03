@@ -8,6 +8,7 @@ import { CountdownTimer } from "@/components/features/countdown-timer";
 import { FounderBadge } from "@/components/features/founder-badge";
 import { KickedBanner } from "@/components/features/kicked-banner";
 import { VoteButton } from "@/components/features/vote-button";
+import { SectionLabel, StoneCard, BuilderAvatar } from "@/components/ui/primitives";
 import { db } from "@/lib/db";
 import { ProjectActions } from "./project-actions";
 
@@ -24,6 +25,13 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     },
   };
 }
+
+type ActivityEvent = {
+  type: "declare" | "update" | "warning" | "shipped" | "kicked";
+  title: string;
+  content?: string;
+  time: Date;
+};
 
 export default async function ProjectPage({ params }: { params: { id: string } }) {
   const { userId } = await auth();
@@ -46,94 +54,325 @@ export default async function ProjectPage({ params }: { params: { id: string } }
     isOwner &&
     (project.status === ProjectStatus.BUILDING ||
       project.status === ProjectStatus.WARNED);
+  
   const shipRate =
     project.user.totalShipped + project.user.totalKicked === 0
       ? 0
       : Math.round((project.user.totalShipped / (project.user.totalShipped + project.user.totalKicked)) * 100);
 
+  // Build the chronological Build Log / Activity List
+  const activityEvents: ActivityEvent[] = [];
+
+  // 1. Declare event
+  activityEvents.push({
+    type: "declare",
+    title: "Idea declared publicly — the clock started",
+    time: project.ideaDeclaredAt,
+  });
+
+  // 2. Add build updates
+  project.buildUpdates.forEach((update) => {
+    activityEvents.push({
+      type: "update",
+      title: `Update: "${update.content}"`,
+      time: update.createdAt,
+    });
+  });
+
+  // 3. Warning events (mocked chronologically if warning sent)
+  if (project.warningsSent > 0) {
+    // Show 24h warning event
+    const warningTime = new Date(project.deadlineAt.getTime() - 24 * 3600 * 1000);
+    activityEvents.push({
+      type: "warning",
+      title: "⚠️ System: 24h warning — community is watching",
+      time: warningTime > project.ideaDeclaredAt ? warningTime : new Date(project.ideaDeclaredAt.getTime() + 1000),
+    });
+  }
+
+  // 4. Shipped / Kicked event
+  if (project.status === ProjectStatus.LAUNCHED && project.launchedAt) {
+    activityEvents.push({
+      type: "shipped",
+      title: "🚀 Shipped successfully!",
+      time: project.launchedAt,
+    });
+  } else if (project.status === ProjectStatus.KICKED) {
+    activityEvents.push({
+      type: "kicked",
+      title: "💀 Kicked — fell from the cliff",
+      time: project.deadlineAt,
+    });
+  }
+
+  // Sort activity list in reverse chronological order (newest first)
+  activityEvents.sort((a, b) => b.time.getTime() - a.time.getTime());
+
   return (
-    <main className="min-h-screen bg-bg-primary px-6 py-10 text-text-primary">
-      <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1fr_320px]">
-        <section className="space-y-8">
-          {project.status === ProjectStatus.KICKED ? <KickedBanner /> : null}
-          <div className="space-y-5">
-            <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center border border-border bg-surface font-mono text-xl font-black text-brand-orange">
-                {project.logoUrl ? project.title.slice(0, 2) : project.title.slice(0, 2)}
+    <main className="min-h-screen bg-bg-primary px-6 py-10 text-text-primary pb-20 select-none">
+      <div className="mx-auto max-w-6xl space-y-6">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1 font-mono text-[10px] font-bold text-text-muted hover:text-text-secondary uppercase select-none mb-2"
+        >
+          ← back to feed
+        </Link>
+
+        {/* Project Header Banner */}
+        <div className="flex flex-wrap items-start gap-4 pb-6 border-b border-border">
+          <div className="w-14 h-14 rounded border border-border bg-rock-3 flex items-center justify-center font-mono font-bold text-xl text-brand-orange uppercase">
+            {project.title.slice(0, 2).toUpperCase()}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-baseline gap-2.5 mb-1.5">
+              <h1 className="font-gothic text-4xl font-bold text-text-primary tracking-wide leading-none">
+                {project.title}
+              </h1>
+              <span className="font-mono text-[9px] font-bold tracking-wider px-2 py-0.5 border border-border text-text-secondary uppercase bg-rock-2">
+                {project.status}
+              </span>
+            </div>
+            <p className="text-sm text-text-secondary font-mono leading-relaxed max-w-2xl">
+              {project.tagline}
+            </p>
+          </div>
+        </div>
+
+        {/* Main Grid */}
+        <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
+          {/* Main Content Column */}
+          <div className="space-y-6">
+            {project.status === ProjectStatus.KICKED && <KickedBanner />}
+
+            {/* Countdown timer: dominant focus */}
+            {(project.status === ProjectStatus.BUILDING ||
+              project.status === ProjectStatus.WARNED) && (
+              <div className="shadow-[0_0_25px_rgba(255,85,0,0.1)]">
+                <CountdownTimer
+                  deadlineAt={project.deadlineAt.toISOString()}
+                  ideaDeclaredAt={project.ideaDeclaredAt.toISOString()}
+                />
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-4xl font-black">{project.title}</h1>
-                  <span className="border border-border px-2 py-1 font-mono text-xs text-text-secondary">{project.status}</span>
+            )}
+
+            {/* Overview / Details */}
+            <div className="space-y-2">
+              <SectionLabel label="WHAT IT DOES" />
+              <StoneCard className="p-6 bg-surface/30">
+                <p className="font-serif text-base text-text-secondary leading-loose whitespace-pre-wrap">
+                  {project.description}
+                </p>
+                {project.screenshotUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={project.screenshotUrl}
+                    alt={project.title}
+                    className="mt-6 w-full border border-border rounded"
+                  />
+                )}
+                {/* Tags */}
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="bg-rock-3 border border-border px-2.5 py-1 text-[10px] font-mono text-text-muted uppercase"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                  {project.toolsUsed.map((tool) => (
+                    <span
+                      key={tool}
+                      className="bg-brand-orange/5 border border-brand-orange/15 px-2.5 py-1 text-[10px] font-mono text-text-secondary"
+                    >
+                      {tool}
+                    </span>
+                  ))}
                 </div>
-                <p className="text-lg text-text-secondary">{project.tagline}</p>
-              </div>
+              </StoneCard>
             </div>
-            {project.status === ProjectStatus.BUILDING ||
-            project.status === ProjectStatus.WARNED ? (
-              <CountdownTimer deadlineAt={project.deadlineAt.toISOString()} />
-            ) : null}
-          </div>
 
-          <div className="grid gap-6">
-            <section className="border border-border bg-surface p-6">
-              <h2 className="mb-3 font-mono text-sm uppercase text-text-muted">Overview</h2>
-              <p className="whitespace-pre-wrap text-text-secondary">{project.description}</p>
-              {project.screenshotUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={project.screenshotUrl} alt={project.title} className="mt-5 w-full border border-border" />
-              ) : null}
-              <div className="mt-5 flex flex-wrap gap-2">
-                {project.tags.map((tag) => <span key={tag} className="border border-border px-2 py-1 text-xs text-text-muted">{tag}</span>)}
-                {project.toolsUsed.map((tool) => <span key={tool} className="border border-brand-orange/20 px-2 py-1 text-xs text-brand-orange">{tool}</span>)}
-              </div>
-            </section>
-
-            <section className="border border-border bg-surface p-6">
-              <h2 className="mb-4 font-mono text-sm uppercase text-text-muted">Updates</h2>
-              {isOwner ? <BuildUpdateForm projectId={project.id} /> : null}
-              <div className="mt-5 space-y-3">
-                {project.buildUpdates.map((update) => (
-                  <div key={update.id} className="border-l border-brand-orange pl-4">
-                    <p>{update.content}</p>
-                    <time className="font-mono text-xs text-text-muted">{update.createdAt.toLocaleString()}</time>
+            {/* Build Log / Timeline */}
+            <div className="space-y-2">
+              <SectionLabel label="BUILD LOG & ACTIVITY" />
+              <StoneCard className="p-6 bg-surface/30 space-y-6">
+                {/* Show updates form if owner */}
+                {isOwner && (
+                  <div className="pb-4 border-b border-border/40">
+                    <BuildUpdateForm projectId={project.id} />
                   </div>
-                ))}
+                )}
+
+                {/* Timeline */}
+                <div className="relative border-l border-border pl-5 ml-2.5 space-y-6">
+                  {activityEvents.map((event, idx) => (
+                    <div key={idx} className="relative">
+                      {/* Timeline dot */}
+                      <span
+                        className={`absolute -left-[25px] top-1.5 w-2 h-2 rounded-full border border-surface ${
+                          event.type === "declare" || event.type === "warning"
+                            ? "bg-brand-orange"
+                            : event.type === "shipped"
+                            ? "bg-brand-green animate-pulse"
+                            : event.type === "kicked"
+                            ? "bg-danger"
+                            : "bg-text-muted"
+                        }`}
+                      />
+                      <div className="space-y-0.5">
+                        <div className="text-xs font-mono font-bold text-text-primary">
+                          {event.title}
+                        </div>
+                        <div className="text-[9px] font-mono text-text-muted">
+                          {event.time.toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </StoneCard>
+            </div>
+
+            {/* Discussion (read-only placeholder as in mockup) */}
+            <div className="space-y-2">
+              <SectionLabel label="DISCUSSION" />
+              <StoneCard className="p-6 bg-surface/30">
+                <textarea
+                  disabled
+                  placeholder="DISCUSSION ROOM LOCKED FOR DEMO V1."
+                  className="w-full bg-rock border border-border p-3 rounded text-xs font-mono text-text-muted outline-none select-none h-20 resize-none"
+                />
+              </StoneCard>
+            </div>
+          </div>
+
+          {/* Sidebar / Aside Column */}
+          <div className="space-y-6">
+            {/* Community votes */}
+            <div className="space-y-2">
+              <SectionLabel label="COMMUNITY VOTES" />
+              <StoneCard className="p-5 text-center bg-rock">
+                <div className="font-mono text-4xl font-extrabold tracking-tighter text-text-primary leading-none mb-1">
+                  {project.voteCount}
+                </div>
+                <div className="font-mono text-[9px] text-text-muted uppercase tracking-wider mb-4">
+                  {"// total votes"}
+                </div>
+                <VoteButton
+                  projectId={project.id}
+                  initialVotes={project.voteCount}
+                  initialVoted={project.votes.length > 0}
+                />
+              </StoneCard>
+            </div>
+
+            {/* Builder profile info */}
+            <div className="space-y-2">
+              <SectionLabel label="BUILDER" />
+              <StoneCard className="p-5 bg-rock">
+                <div className="flex items-center gap-3.5 mb-4">
+                  <BuilderAvatar
+                    displayName={project.user.displayName}
+                    xHandle={project.user.xHandle}
+                    size={38}
+                  />
+                  <div>
+                    <div className="font-mono text-xs font-bold text-text-primary flex items-center gap-1">
+                      <span>{project.user.displayName}</span>
+                      {project.user.plan === "FOUNDER" && <FounderBadge />}
+                    </div>
+                    <div className="text-[10px] text-text-muted font-mono leading-none mt-1">
+                      @{project.user.username}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-center select-none">
+                  <div className="bg-surface border border-border p-2 rounded-sm">
+                    <div className="font-mono text-sm font-bold text-text-primary leading-none mb-1">
+                      {project.user.totalShipped}
+                    </div>
+                    <div className="text-[7px] text-text-muted font-mono uppercase tracking-wider leading-none">
+                      shipped
+                    </div>
+                  </div>
+                  <div className="bg-surface border border-border p-2 rounded-sm">
+                    <div className="font-mono text-sm font-bold text-text-primary leading-none mb-1">
+                      {project.user.totalKicked}
+                    </div>
+                    <div className="text-[7px] text-text-muted font-mono uppercase tracking-wider leading-none">
+                      kicked
+                    </div>
+                  </div>
+                  <div className="bg-surface border border-border p-2 rounded-sm col-span-2">
+                    <div className="font-mono text-sm font-bold text-brand-orange leading-none mb-1">
+                      {shipRate}%
+                    </div>
+                    <div className="text-[7px] text-text-muted font-mono uppercase tracking-wider leading-none">
+                      ship rate
+                    </div>
+                  </div>
+                </div>
+              </StoneCard>
+            </div>
+
+            {/* Tech stack */}
+            {project.toolsUsed.length > 0 && (
+              <div className="space-y-2">
+                <SectionLabel label="BUILT WITH" />
+                <StoneCard className="p-4 bg-rock divide-y divide-border">
+                  {project.toolsUsed.map((tool) => (
+                    <div key={tool} className="flex justify-between items-center py-2 text-[10px] font-mono">
+                      <span className="text-text-secondary">{tool}</span>
+                      <span className="text-text-muted text-[8px] uppercase">stack tool</span>
+                    </div>
+                  ))}
+                </StoneCard>
               </div>
-            </section>
+            )}
 
-            <section className="border border-border bg-surface p-6">
-              <h2 className="mb-4 font-mono text-sm uppercase text-text-muted">Discussion</h2>
-              <textarea className="min-h-24 w-full border border-border bg-bg-primary p-3" placeholder="Discussion placeholder for v1." />
-            </section>
-          </div>
-        </section>
+            {/* Owner specific project actions */}
+            {isOwner && (
+              <div className="space-y-2">
+                <SectionLabel label="PROJECT CONSOLE" />
+                <StoneCard className="p-4 bg-rock border-dashed border-border-strong">
+                  <ProjectActions
+                    projectId={project.id}
+                    title={project.title}
+                    tagline={project.tagline}
+                    canLaunch={canLaunch}
+                  />
+                </StoneCard>
+              </div>
+            )}
 
-        <aside className="space-y-5">
-          <div className="border border-border bg-surface p-5">
-            <div className="mb-3 font-mono text-5xl font-black text-brand-orange">{project.voteCount}</div>
-            <VoteButton projectId={project.id} initialVotes={project.voteCount} initialVoted={project.votes.length > 0} className="w-full justify-center" />
+            {/* Live URL */}
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full bg-brand-green hover:bg-brand-green/90 text-white font-mono font-bold text-xs uppercase tracking-wider text-center py-3 rounded transition-colors"
+              >
+                🚀 Open Live app
+              </a>
+            )}
+
+            {/* Tweet if launched */}
+            {project.status === ProjectStatus.LAUNCHED && (
+              <a
+                href={`https://x.com/intent/tweet?text=${encodeURIComponent(
+                  `Just shipped ${project.title} on @BuildOrDie in 4 days. ${project.tagline}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full border border-brand-orange text-brand-orange hover:bg-brand-orange/5 font-mono font-bold text-xs uppercase tracking-wider text-center py-3 rounded transition-colors"
+              >
+                Share on X / Twitter
+              </a>
+            )}
           </div>
-          <div className="border border-border bg-surface p-5">
-            <div className="flex items-center justify-between">
-              <Link href={`/profile/${project.user.username}`} className="font-bold">{project.user.displayName}</Link>
-              {project.user.plan === "FOUNDER" ? <FounderBadge /> : null}
-            </div>
-            {project.user.xHandle ? <a href={`https://x.com/${project.user.xHandle}`} className="text-sm text-brand-orange">@{project.user.xHandle}</a> : null}
-            <div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs text-text-muted">
-              <span>{project.user.totalShipped} shipped</span>
-              <span>{project.user.totalKicked} kicked</span>
-              <span>{shipRate}% rate</span>
-            </div>
-          </div>
-          {isOwner && (
-            <ProjectActions projectId={project.id} title={project.title} tagline={project.tagline} canLaunch={canLaunch} />
-          )}
-          {project.liveUrl ? <a href={project.liveUrl} className="block bg-brand-green px-4 py-3 text-center font-bold text-bg-primary">Live URL</a> : null}
-          {project.status === ProjectStatus.LAUNCHED ? (
-            <a href={`https://x.com/intent/tweet?text=${encodeURIComponent(`Just shipped ${project.title} on @BuildOrDie in 4 days. ${project.tagline}`)}`} className="block border border-brand-orange px-4 py-3 text-center text-brand-orange">Share on X</a>
-          ) : null}
-        </aside>
+        </div>
       </div>
     </main>
   );

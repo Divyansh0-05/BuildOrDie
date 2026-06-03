@@ -31,7 +31,7 @@ export default async function SubmitPage() {
           <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-brand-orange">
             Declare publicly
           </p>
-          <h1 className="text-4xl font-black">Start the 4-day clock.</h1>
+          <h1 className="text-4xl font-bold font-gothic tracking-wide">Start the 4-day clock.</h1>
           <p className="text-text-secondary">
             Submit once. The deadline is set by the server. No takebacks.
           </p>

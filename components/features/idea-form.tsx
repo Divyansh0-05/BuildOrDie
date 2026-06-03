@@ -171,7 +171,7 @@ export function IdeaForm({ user }: { user: { username: string; displayName: stri
       {/* Step Indicators */}
       <div className="flex items-center justify-between pb-4 border-b border-border">
         <div>
-          <h2 className="text-xl font-bold font-sans text-text-primary">Declare your idea</h2>
+          <h2 className="text-2xl font-bold font-gothic tracking-wide text-text-primary">Declare your idea</h2>
           <p className="text-xs font-mono text-text-muted uppercase tracking-wider mt-0.5">
             {"// clock.starts.immediately"}
           </p>

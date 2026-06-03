@@ -1,28 +1,47 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface CountdownTimerProps {
   deadlineAt: string;
+  ideaDeclaredAt?: string;
   variant?: "default" | "small";
 }
 
-export function CountdownTimer({ deadlineAt, variant = "default" }: CountdownTimerProps) {
+export function CountdownTimer({
+  deadlineAt,
+  ideaDeclaredAt,
+  variant = "default",
+}: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState<{
     hours: number;
     minutes: number;
     seconds: number;
     totalSeconds: number;
+    elapsedPercent: number;
+    declaredText: string;
   } | null>(null);
 
   useEffect(() => {
-    const calculateTimeLeft = () => {
+    const calculateTime = () => {
       const deadline = new Date(deadlineAt).getTime();
+      const declared = ideaDeclaredAt
+        ? new Date(ideaDeclaredAt).getTime()
+        : deadline - 96 * 3600 * 1000; // default 4 days window
+      
       const now = new Date().getTime();
       const difference = deadline - now;
 
       if (difference <= 0) {
-        return { hours: 0, minutes: 0, seconds: 0, totalSeconds: 0 };
+        return {
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+          totalSeconds: 0,
+          elapsedPercent: 100,
+          declaredText: "Time is up",
+        };
       }
 
       const totalSeconds = Math.floor(difference / 1000);
@@ -30,18 +49,34 @@ export function CountdownTimer({ deadlineAt, variant = "default" }: CountdownTim
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
 
-      return { hours, minutes, seconds, totalSeconds };
+      // Calculate elapsed percentage
+      const totalDuration = deadline - declared;
+      const elapsed = now - declared;
+      const elapsedPercent = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
+
+      // Calculate "declared X ago" text
+      const declaredDiff = now - declared;
+      const declaredDays = Math.floor(declaredDiff / (24 * 3600 * 1000));
+      const declaredHours = Math.floor((declaredDiff % (24 * 3600 * 1000)) / (3600 * 1000));
+      let declaredText = "declared just now";
+      if (declaredDays > 0) {
+        declaredText = `declared ${declaredDays}d ${declaredHours}h ago`;
+      } else if (declaredHours > 0) {
+        declaredText = `declared ${declaredHours}h ago`;
+      }
+
+      return { hours, minutes, seconds, totalSeconds, elapsedPercent, declaredText };
     };
 
     // Calculate immediately
-    setTimeLeft(calculateTimeLeft());
+    setTimeLeft(calculateTime());
 
     const interval = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      setTimeLeft(calculateTime());
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [deadlineAt]);
+  }, [deadlineAt, ideaDeclaredAt]);
 
   if (!timeLeft) {
     return (
@@ -51,82 +86,103 @@ export function CountdownTimer({ deadlineAt, variant = "default" }: CountdownTim
     );
   }
 
-  const { hours, minutes, seconds, totalSeconds } = timeLeft;
-
-  // Format with leading zeros
+  const { hours, minutes, seconds, totalSeconds, elapsedPercent, declaredText } = timeLeft;
   const pad = (n: number) => String(n).padStart(2, "0");
-  const formattedTime = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 
-  // Determine urgency and colors
-  // >24h = brand-orange
-  // <24h = brand-amber
-  // <6h = brand-orange + animate-pulse
   const isExpired = totalSeconds === 0;
-  const isCritical = totalSeconds < 6 * 3600; // < 6h
+  const isCritical = totalSeconds < 12 * 3600; // < 12h
   const isWarning = totalSeconds < 24 * 3600; // < 24h
 
-  let timerColorClass = "text-brand-orange";
+  // Colors
+  let colorClass = "text-brand-orange";
   if (isExpired) {
-    timerColorClass = "text-text-muted";
+    colorClass = "text-text-muted";
   } else if (isCritical) {
-    timerColorClass = "text-brand-orange animate-pulse";
+    colorClass = "text-brand-orange animate-pulse";
   } else if (isWarning) {
-    timerColorClass = "text-brand-amber";
+    colorClass = "text-brand-amber";
   }
 
   if (variant === "small") {
     return (
-      <span className={`font-mono font-bold tracking-wider ${timerColorClass}`}>
-        {formattedTime}
+      <span className={cn("font-mono font-bold tracking-wider select-none", colorClass)}>
+        {isExpired ? "SHIPPED/KICKED" : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`}
       </span>
     );
   }
 
-  // Calculate elapsed progress based on standard 96 hour (4 day) window
-  const totalWindowSeconds = 96 * 3600;
-  const elapsedSeconds = Math.max(0, totalWindowSeconds - totalSeconds);
-  const progressPercent = Math.min(100, (elapsedSeconds / totalWindowSeconds) * 100);
-
-  // Contextual subtext
-  let subtext = "Still time. Stop reading. Start building.";
+  // Dynamic warning message
+  let subtext = `// ${hours} hours left — stop reading this. start building.`;
   if (isExpired) {
-    subtext = "Time is up. Project kicked.";
+    subtext = "// time is up. countdown showed no mercy.";
   } else if (isCritical) {
-    subtext = "Final hours. This is your last chance. Go.";
+    subtext = `// under 12 hours left. this is your last stand. go.`;
   } else if (isWarning) {
-    subtext = "24h left — ship something, anything.";
+    subtext = `// 24h warning — community is watching. ship it.`;
   }
 
   return (
-    <div className="w-full flex flex-col gap-3.5 bg-surface border border-border p-5 rounded-lg">
-      <div className="flex items-baseline justify-between">
-        <span className="text-xs font-mono text-text-muted font-semibold uppercase tracking-wider">
-          {"// countdown.remaining"}
+    <div className="bg-rock border border-border rounded p-5 select-none relative">
+      {/* Top indicator */}
+      <div className="flex items-center justify-between mb-3.5">
+        <span className="text-[9px] font-mono text-text-muted font-bold tracking-[0.1em] uppercase">
+          {"// TIME REMAINING TO SHIP OR DIE"}
         </span>
         {isCritical && !isExpired && (
-          <span className="text-[10px] font-mono text-brand-orange uppercase tracking-wider font-bold animate-pulse">
+          <span className="text-[8px] font-mono text-brand-orange font-black tracking-widest uppercase animate-pulse border border-brand-orange/30 bg-brand-orange/10 px-1.5 py-0.5 rounded">
             CRITICAL
           </span>
         )}
       </div>
 
-      <div className={`text-4xl sm:text-5xl font-mono font-black tracking-widest leading-none ${timerColorClass}`}>
-        {formattedTime}
+      {/* Digits Display */}
+      <div className="flex items-end gap-1.5">
+        <div className="flex flex-col items-center">
+          <div className={cn("font-mono text-4xl sm:text-5xl font-black tracking-tighter leading-none", colorClass)}>
+            {pad(hours)}
+          </div>
+          <div className="text-[8px] font-mono text-text-muted mt-1 uppercase tracking-wider">HRS</div>
+        </div>
+
+        <div className="font-mono text-3xl sm:text-4xl text-border-strong pb-3 leading-none select-none">:</div>
+
+        <div className="flex flex-col items-center">
+          <div className={cn("font-mono text-4xl sm:text-5xl font-black tracking-tighter leading-none", colorClass)}>
+            {pad(minutes)}
+          </div>
+          <div className="text-[8px] font-mono text-text-muted mt-1 uppercase tracking-wider">MIN</div>
+        </div>
+
+        <div className="font-mono text-3xl sm:text-4xl text-border-strong pb-3 leading-none select-none">:</div>
+
+        <div className="flex flex-col items-center">
+          <div className={cn("font-mono text-4xl sm:text-5xl font-black tracking-tighter leading-none", colorClass)}>
+            {pad(seconds)}
+          </div>
+          <div className="text-[8px] font-mono text-text-muted mt-1 uppercase tracking-wider">SEC</div>
+        </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-border h-2 rounded-full overflow-hidden">
-        <div
-          className="bg-brand-orange h-full rounded-full transition-all duration-1000 ease-out"
-          style={{ width: `${progressPercent}%` }}
-        />
+      <div className="mt-5">
+        <div className="w-full bg-border h-[3px] rounded-full overflow-hidden">
+          <div
+            className={cn(
+              "h-full rounded-full transition-all duration-1000 ease-out",
+              isExpired ? "bg-text-muted" : isCritical ? "bg-brand-orange" : "bg-brand-amber"
+            )}
+            style={{ width: `${elapsedPercent}%` }}
+          />
+        </div>
+        <div className="flex justify-between items-center mt-2 text-[9px] font-mono text-text-muted font-medium">
+          <span>{declaredText}</span>
+          <span>{elapsedPercent.toFixed(0)}% elapsed</span>
+        </div>
       </div>
 
-      <div className="flex items-center justify-between text-xs font-mono">
-        <span className="text-text-muted uppercase tracking-wider font-semibold">
-          {progressPercent.toFixed(0)}% elapsed
-        </span>
-        <span className="text-text-secondary font-semibold">{subtext}</span>
+      {/* Subtext */}
+      <div className="mt-4 text-[10px] font-mono text-text-muted italic leading-relaxed">
+        {subtext}
       </div>
     </div>
   );

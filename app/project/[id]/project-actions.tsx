@@ -19,20 +19,20 @@ export function ProjectActions({
   const [boostOpen, setBoostOpen] = useState(false);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2.5 select-none w-full">
       {canLaunch ? (
         <button
           onClick={() => setLaunchOpen(true)}
-          className="w-full bg-brand-orange px-4 py-3 font-mono font-black uppercase text-bg-primary"
+          className="w-full bg-brand-orange hover:bg-brand-amber text-white px-4 py-2.5 font-mono font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
         >
-          LAUNCH
+          🚀 LAUNCH THIS PROJECT
         </button>
       ) : null}
       <button
         onClick={() => setBoostOpen(true)}
-        className="w-full border border-brand-orange px-4 py-3 font-mono font-bold uppercase text-brand-orange"
+        className="w-full border border-brand-orange text-brand-orange hover:bg-brand-orange/5 px-4 py-2.5 font-mono font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer"
       >
-        Feature this project
+        🔥 FEATURE THIS PROJECT
       </button>
       <LaunchModal
         projectId={projectId}
@@ -45,4 +45,5 @@ export function ProjectActions({
       <BoostSlotModal projectId={projectId} isOpen={boostOpen} onClose={() => setBoostOpen(false)} />
     </div>
   );
+
 }

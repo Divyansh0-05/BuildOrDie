@@ -3,7 +3,6 @@
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useState, useTransition, useEffect } from "react";
-import { ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePostHog } from "posthog-js/react";
 
@@ -12,6 +11,7 @@ interface VoteButtonProps {
   initialVotes: number;
   initialVoted: boolean;
   className?: string;
+  variant?: "default" | "feed";
 }
 
 export function VoteButton({
@@ -19,6 +19,7 @@ export function VoteButton({
   initialVotes,
   initialVoted,
   className,
+  variant = "default",
 }: VoteButtonProps) {
   const posthog = usePostHog();
   const { isSignedIn } = useAuth();
@@ -38,7 +39,10 @@ export function VoteButton({
     setVoteCount(initialVotes);
   }, [initialVotes]);
 
-  const handleVote = async () => {
+  const handleVote = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (!isSignedIn) {
       // Redirect to sign in if not logged in
       const currentUrl = typeof window !== "undefined" ? window.location.pathname : "";
@@ -95,27 +99,44 @@ export function VoteButton({
 
   const isButtonDisabled = isLoading || isPending;
 
+  if (variant === "feed") {
+    return (
+      <div className="flex flex-col items-center gap-1 select-none">
+        <button
+          onClick={handleVote}
+          disabled={isButtonDisabled}
+          className={cn(
+            "w-7 h-6 border rounded-sm flex items-center justify-center font-mono text-xs transition-all active:scale-95 duration-100 cursor-pointer",
+            voted
+              ? "border-brand-orange text-brand-orange bg-brand-orange/10"
+              : "border-border text-text-muted hover:border-brand-orange hover:text-brand-orange hover:bg-brand-orange/5",
+            isButtonDisabled && "opacity-60 cursor-not-allowed"
+          )}
+        >
+          ▲
+        </button>
+        <span className="font-mono text-[10px] text-text-secondary font-bold">
+          {voteCount}
+        </span>
+      </div>
+    );
+  }
+
+  // Large button (default)
   return (
     <button
       onClick={handleVote}
       disabled={isButtonDisabled}
       className={cn(
-        "inline-flex items-center gap-1.5 px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider rounded border transition-all active:scale-95 duration-100",
+        "w-full flex items-center justify-center gap-1.5 px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider rounded border transition-all active:scale-95 duration-100 cursor-pointer",
         voted
           ? "bg-brand-orange/10 border-brand-orange text-brand-orange shadow-[0_0_12px_rgba(255,77,0,0.15)]"
-          : "bg-surface border-border text-text-muted hover:text-text-primary hover:border-border-strong",
+          : "bg-transparent border-border text-text-muted hover:text-brand-orange hover:border-brand-orange hover:bg-brand-orange/5",
         isButtonDisabled && "opacity-70 cursor-not-allowed",
         className
       )}
     >
-      <ChevronUp
-        className={cn(
-          "w-4 h-4 transition-transform duration-200",
-          voted ? "text-brand-orange fill-brand-orange scale-110" : "text-text-muted",
-          !isButtonDisabled && "group-hover:-translate-y-0.5"
-        )}
-      />
-      <span>{voteCount}</span>
+      <span>{voted ? "▲ voted" : "▲ upvote"}</span>
     </button>
   );
 }

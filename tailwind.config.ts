@@ -13,24 +13,45 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        "bg-primary": "#080810",
-        surface: "#0E0E1C",
-        border: "#1C1C30",
-        "border-strong": "#2A2A45",
-        "brand-orange": "#FF4D00",
-        "brand-amber": "#F59E0B",
-        "brand-green": "#00D680",
-        "text-primary": "#F0F0FF",
-        "text-secondary": "#8888AA",
-        "text-muted": "#5C5C80",
-        "text-dim": "#3A3A5A",
+        // Theme color mappings
+        "bg-primary": "#120E0A", // rock
+        surface: "#1C1610", // rock-2
+        border: "#332A1F", // bone-4
+        "border-strong": "#5C4E3A", // bone-3
+        "brand-orange": "#FF5500", // ember
+        "brand-amber": "#FF8000", // ember-2
+        "brand-green": "#3A5C3E", // moss
+        "text-primary": "#D4C4A8", // bone
+        "text-secondary": "#9A8870", // bone-2
+        "text-muted": "#5C4E3A", // bone-3
+        "text-dim": "#332A1F", // bone-4
+
+        // Exact mockup variables
+        rock: "#120E0A",
+        "rock-2": "#1C1610",
+        "rock-3": "#251D14",
+        "rock-4": "#32271A",
+        "rock-5": "#3D3025",
+        ember: "#FF5500",
+        "ember-2": "#FF8000",
+        "ember-3": "#FFAA00",
+        bone: "#D4C4A8",
+        "bone-2": "#9A8870",
+        "bone-3": "#5C4E3A",
+        "bone-4": "#332A1F",
+        moss: "#3A5C3E",
+        gold: "#C8962A",
+        danger: "#CC2200",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "Inter", "sans-serif"],
         mono: ["var(--font-jetbrains-mono)", "JetBrains Mono", "monospace"],
+        gothic: ["UnifrakturMaguntia", "cursive"],
+        serif: ["Crimson Pro", "serif"],
       },
     },
   },
   plugins: [tailwindcssAnimate],
 };
 export default config;
+
