@@ -126,7 +126,9 @@ export default async function ProjectPage({ params }: { params: { id: string } }
               <span>{shipRate}% rate</span>
             </div>
           </div>
-          <ProjectActions projectId={project.id} title={project.title} tagline={project.tagline} canLaunch={canLaunch} />
+          {isOwner && (
+            <ProjectActions projectId={project.id} title={project.title} tagline={project.tagline} canLaunch={canLaunch} />
+          )}
           {project.liveUrl ? <a href={project.liveUrl} className="block bg-brand-green px-4 py-3 text-center font-bold text-bg-primary">Live URL</a> : null}
           {project.status === ProjectStatus.LAUNCHED ? (
             <a href={`https://x.com/intent/tweet?text=${encodeURIComponent(`Just shipped ${project.title} on @BuildOrDie in 4 days. ${project.tagline}`)}`} className="block border border-brand-orange px-4 py-3 text-center text-brand-orange">Share on X</a>

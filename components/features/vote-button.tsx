@@ -2,7 +2,7 @@
 
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -22,9 +22,19 @@ export function VoteButton({
   const { isSignedIn } = useAuth();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [voted, setVoted] = useState(initialVoted);
   const [voteCount, setVoteCount] = useState(initialVotes);
+
+  // Synchronize state when server props update
+  useEffect(() => {
+    setVoted(initialVoted);
+  }, [initialVoted]);
+
+  useEffect(() => {
+    setVoteCount(initialVotes);
+  }, [initialVotes]);
 
   const handleVote = async () => {
     if (!isSignedIn) {
@@ -34,7 +44,9 @@ export function VoteButton({
       return;
     }
 
-    if (isPending) return;
+    if (isLoading || isPending) return;
+
+    setIsLoading(true);
 
     // Optimistic Update
     const newVoted = !voted;
@@ -43,42 +55,50 @@ export function VoteButton({
     setVoted(newVoted);
     setVoteCount(newCount);
 
-    startTransition(async () => {
-      try {
-        const res = await fetch(`/api/votes/${projectId}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+    try {
+      const res = await fetch(`/api/votes/${projectId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-        if (!res.ok) {
-          throw new Error("Failed to vote");
-        }
-
-        const data = (await res.json()) as { voted: boolean; voteCount: number };
-        // Sync with exact server count and state
-        setVoted(data.voted);
-        setVoteCount(data.voteCount);
-      } catch (err) {
-        console.error("Voting error:", err);
-        // Rollback on error
-        setVoted(!newVoted);
-        setVoteCount(voted ? voteCount : Math.max(0, voteCount));
+      if (!res.ok) {
+        throw new Error("Failed to vote");
       }
-    });
+
+      const data = (await res.json()) as { voted: boolean; voteCount: number };
+      
+      // Sync with exact server count and state
+      setVoted(data.voted);
+      setVoteCount(data.voteCount);
+
+      // Trigger a server-side component refetch to refresh page cache
+      startTransition(() => {
+        router.refresh();
+      });
+    } catch (err) {
+      console.error("Voting error:", err);
+      // Rollback on error
+      setVoted(!newVoted);
+      setVoteCount(voted ? voteCount : Math.max(0, voteCount));
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const isButtonDisabled = isLoading || isPending;
 
   return (
     <button
       onClick={handleVote}
-      disabled={isPending}
+      disabled={isButtonDisabled}
       className={cn(
         "inline-flex items-center gap-1.5 px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wider rounded border transition-all active:scale-95 duration-100",
         voted
           ? "bg-brand-orange/10 border-brand-orange text-brand-orange shadow-[0_0_12px_rgba(255,77,0,0.15)]"
           : "bg-surface border-border text-text-muted hover:text-text-primary hover:border-border-strong",
-        isPending && "opacity-70 cursor-not-allowed",
+        isButtonDisabled && "opacity-70 cursor-not-allowed",
         className
       )}
     >
@@ -86,7 +106,7 @@ export function VoteButton({
         className={cn(
           "w-4 h-4 transition-transform duration-200",
           voted ? "text-brand-orange fill-brand-orange scale-110" : "text-text-muted",
-          !isPending && "group-hover:-translate-y-0.5"
+          !isButtonDisabled && "group-hover:-translate-y-0.5"
         )}
       />
       <span>{voteCount}</span>
