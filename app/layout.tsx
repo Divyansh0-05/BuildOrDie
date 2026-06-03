@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { BuildOrDieClerkProvider } from "@/providers/clerk-provider";
 import { PostHogProvider } from "@/providers/posthog-provider";
 import { Navbar } from "@/components/features/navbar";
+import { Footer } from "@/components/features/footer";
 import "./globals.css";
 
 const inter = Inter({
@@ -30,10 +31,13 @@ export default function RootLayout({
   return (
     <BuildOrDieClerkProvider>
       <html lang="en" className="dark bg-bg-primary" suppressHydrationWarning>
-        <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
+        <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans flex flex-col min-h-screen justify-between`}>
           <PostHogProvider>
-            <Navbar />
-            {children}
+            <div>
+              <Navbar />
+              {children}
+            </div>
+            <Footer />
           </PostHogProvider>
         </body>
       </html>

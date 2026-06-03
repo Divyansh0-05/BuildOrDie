@@ -3,14 +3,10 @@ import { auth } from "@clerk/nextjs/server";
 import { ProjectStatus } from "@prisma/client";
 import { LiveFoundersTable } from "@/components/features/live-founders-table";
 import { FeaturedStrip } from "@/components/features/featured-strip";
-import { FeedRow } from "@/components/ui/feed-row";
 import { SectionLabel, StatBar, StoneCard } from "@/components/ui/primitives";
 import { db } from "@/lib/db";
 import { CountdownTimer } from "@/components/features/countdown-timer";
-
-export const revalidate = 10; // short revalidation for dynamic live updates
-
-const filters = ["All", "Building Now", "Just Launched", "Need Co-builder", "AI", "SaaS", "Tools", "Other"];
+import { ProjectFeed } from "@/components/features/project-feed";
 
 type HomeSearchParams = {
   filter?: string;
@@ -25,15 +21,6 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
     : null;
   const filter = searchParams.filter ?? "All";
   const search = searchParams.search?.trim();
-
-  const statusFilter =
-    filter === "Building Now"
-      ? [ProjectStatus.BUILDING, ProjectStatus.WARNED]
-      : filter === "Just Launched"
-      ? [ProjectStatus.LAUNCHED]
-      : [ProjectStatus.BUILDING, ProjectStatus.WARNED, ProjectStatus.LAUNCHED, ProjectStatus.KICKED];
-  
-  const tagFilter = ["AI", "SaaS", "Tools", "Other"].includes(filter) ? filter : null;
 
   // Twelve hours window for about to die query
   const twelveHoursFromNow = new Date(Date.now() + 12 * 60 * 60 * 1000);
@@ -109,20 +96,10 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
     }),
     db.project.findMany({
       where: {
-        status: { in: statusFilter },
         user: { deletedAt: null },
-        ...(tagFilter ? { tags: { has: tagFilter } } : {}),
-        ...(search
-          ? {
-              OR: [
-                { title: { contains: search, mode: "insensitive" } },
-                { tagline: { contains: search, mode: "insensitive" } },
-              ],
-            }
-          : {}),
       },
       orderBy: [{ voteCount: "desc" }, { createdAt: "desc" }],
-      take: 20,
+      take: 100,
       include: { user: { select: { username: true, displayName: true, plan: true } } },
     }),
     currentUser
@@ -340,57 +317,15 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
         {/* ─── MAIN FEED ─── */}
         <div className="space-y-6">
           <SectionLabel label={`BUILDERS AT THE ROCK FACE — ${totalBuilding} ACTIVE`} />
-
-          {/* Filter Pills */}
-          <div className="flex flex-wrap gap-2 select-none">
-            {filters.map((item) => (
-              <Link
-                key={item}
-                href={`/?filter=${encodeURIComponent(item)}`}
-                className={`font-mono text-[9px] font-bold tracking-wider px-3 py-1.5 border rounded-sm transition-all uppercase ${
-                  filter === item
-                    ? "border-brand-orange text-brand-orange bg-brand-orange/5"
-                    : "border-border text-text-muted hover:border-text-secondary hover:text-text-secondary"
-                }`}
-              >
-                {item}
-              </Link>
-            ))}
-          </div>
-
-          {/* Search Form */}
-          <form className="flex max-w-xl gap-2">
-            <input
-              name="search"
-              defaultValue={search}
-              placeholder="SEARCH THE ROCK FACE..."
-              className="flex-1 font-mono text-xs border border-border bg-surface px-4 py-3 text-text-primary placeholder-text-muted outline-none focus:border-text-muted transition-colors rounded-sm"
-            />
-            <button className="bg-brand-orange border border-brand-orange/45 px-5 font-mono font-bold text-xs text-white uppercase tracking-wider hover:bg-brand-amber transition-colors rounded-sm">
-              Search
-            </button>
-          </form>
-
-          {/* Feed rows list */}
-          {projects.length === 0 ? (
-            <div className="border border-dashed border-border p-12 text-center text-xs font-mono text-text-muted uppercase tracking-wider">
-              No projects found on the rock face.
-            </div>
-          ) : (
-            <div className="border border-border bg-surface/15 rounded-md px-4 py-2 divide-y divide-border">
-              {projects.map((project, index) => (
-                <FeedRow
-                  key={project.id}
-                  rank={index + 1}
-                  project={{
-                    ...project,
-                    deadlineAt: project.deadlineAt.toISOString(),
-                  }}
-                  hasVoted={votedProjectIds.has(project.id)}
-                />
-              ))}
-            </div>
-          )}
+          <ProjectFeed
+            initialProjects={projects.map((project) => ({
+              ...project,
+              deadlineAt: project.deadlineAt.toISOString(),
+            }))}
+            votedProjectIds={votedProjectIds}
+            initialFilter={filter}
+            initialSearch={search}
+          />
         </div>
 
         {/* ─── RECENT CASUALTIES SECTION (DEATH MOUNTAIN REPLACEMENT) ─── */}

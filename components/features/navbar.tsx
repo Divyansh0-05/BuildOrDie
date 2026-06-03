@@ -4,6 +4,8 @@ import { UserButton } from "@clerk/nextjs";
 import { db } from "@/lib/db";
 import { Role } from "@prisma/client";
 
+import { NavbarLinks } from "./navbar-links";
+
 export async function Navbar() {
   const { userId } = await auth();
 
@@ -42,69 +44,21 @@ export async function Navbar() {
         </Link>
 
         {/* Navigation links */}
-        <div className="flex items-center gap-1 sm:gap-2 font-mono text-[10px] font-bold text-text-muted uppercase">
-          <Link
-            href="/"
-            className="px-2.5 py-1.5 border border-transparent rounded hover:border-border hover:text-text-primary transition-all"
-          >
-            HOME
-          </Link>
-          <Link
-            href="/leaderboard"
-            className="px-2.5 py-1.5 border border-transparent rounded hover:border-border hover:text-text-primary transition-all"
-          >
-            LEADERBOARD
-          </Link>
-          <Link
-            href="/tools"
-            className="px-2.5 py-1.5 border border-transparent rounded hover:border-border hover:text-text-primary transition-all"
-          >
-            TOOLS
-          </Link>
-          <Link
-            href="/passes"
-            className="px-2.5 py-1.5 border border-transparent rounded hover:border-border hover:text-text-primary transition-all"
-          >
-            PASSES
-          </Link>
-
-          {isInvestor && (
-            <Link
-              href="/investor/feed"
-              className="px-2.5 py-1.5 border border-transparent rounded text-brand-green hover:border-border transition-all"
-            >
-              INVESTORS
-            </Link>
-          )}
-          {isAdmin && (
-            <Link
-              href="/admin"
-              className="px-2.5 py-1.5 border border-transparent rounded text-brand-orange hover:border-border transition-all"
-            >
-              ADMIN
-            </Link>
-          )}
-
-          <div className="h-4 w-[1px] bg-border mx-1" />
-
-          {userId ? (
-            <div className="flex items-center gap-3.5 pl-1.5">
-              <Link
-                href="/dashboard"
-                className="px-2.5 py-1.5 border border-transparent rounded hover:border-border hover:text-text-primary transition-all"
-              >
-                DASHBOARD
-              </Link>
+        <div className="flex items-center gap-2">
+          <NavbarLinks userId={userId} isAdmin={isAdmin} isInvestor={isInvestor} />
+          
+          <div className="flex items-center gap-2 pl-1">
+            {userId ? (
               <UserButton afterSignOutUrl="/" />
-            </div>
-          ) : (
-            <Link
-              href="/submit"
-              className="bg-brand-orange border border-brand-orange/45 px-3.5 py-2 font-mono font-bold text-[10px] text-white uppercase tracking-wider transition-all hover:bg-brand-amber ml-1.5"
-            >
-              START THE CLOCK →
-            </Link>
-          )}
+            ) : (
+              <Link
+                href="/submit"
+                className="bg-brand-orange border border-brand-orange/45 px-3.5 py-2 font-mono font-bold text-[10px] text-white uppercase tracking-wider transition-all hover:bg-brand-amber rounded-[2px]"
+              >
+                START THE CLOCK →
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </nav>
