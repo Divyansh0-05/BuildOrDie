@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { X, Globe, GitBranch, Image as ImageIcon, CheckCircle, Share2 } from "lucide-react";
+import { usePostHog } from "posthog-js/react";
 
 interface LaunchModalProps {
   projectId: string;
@@ -20,6 +21,7 @@ export function LaunchModal({
   onClose,
   onLaunchSuccess,
 }: LaunchModalProps) {
+  const posthog = usePostHog();
   const [liveUrl, setLiveUrl] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
   const [screenshotUrl, setScreenshotUrl] = useState("");
@@ -80,6 +82,7 @@ export function LaunchModal({
         throw new Error(errData?.error || "Launch failed.");
       }
 
+      posthog.capture("project_launched", { projectId });
       setIsLaunched(true);
       onLaunchSuccess();
     } catch (err: unknown) {

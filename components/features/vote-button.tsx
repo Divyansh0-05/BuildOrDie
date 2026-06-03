@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition, useEffect } from "react";
 import { ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePostHog } from "posthog-js/react";
 
 interface VoteButtonProps {
   projectId: string;
@@ -19,6 +20,7 @@ export function VoteButton({
   initialVoted,
   className,
 }: VoteButtonProps) {
+  const posthog = usePostHog();
   const { isSignedIn } = useAuth();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -72,6 +74,10 @@ export function VoteButton({
       // Sync with exact server count and state
       setVoted(data.voted);
       setVoteCount(data.voteCount);
+
+      if (data.voted) {
+        posthog.capture("vote_cast", { projectId });
+      }
 
       // Trigger a server-side component refetch to refresh page cache
       startTransition(() => {

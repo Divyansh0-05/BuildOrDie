@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { BuildOrDieClerkProvider } from "@/providers/clerk-provider";
 import { PostHogProvider } from "@/providers/posthog-provider";
+import { Navbar } from "@/components/features/navbar";
 import "./globals.css";
 
 const inter = Inter({
@@ -30,7 +31,10 @@ export default function RootLayout({
     <BuildOrDieClerkProvider>
       <html lang="en" className="dark bg-bg-primary" suppressHydrationWarning>
         <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
-          <PostHogProvider>{children}</PostHogProvider>
+          <PostHogProvider>
+            <Navbar />
+            {children}
+          </PostHogProvider>
         </body>
       </html>
     </BuildOrDieClerkProvider>

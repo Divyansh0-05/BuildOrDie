@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, Play, Flame } from "lucide-react";
 import { ProjectCard } from "./project-card";
 import { ProjectStatus } from "@prisma/client";
+import { usePostHog } from "posthog-js/react";
 
 const AVAILABLE_TAGS = [
   "AI",
@@ -38,6 +39,7 @@ const AVAILABLE_TOOLS = [
 
 export function IdeaForm({ user }: { user: { username: string; displayName: string; plan: "FREE" | "FOUNDER" } }) {
   const router = useRouter();
+  const posthog = usePostHog();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -131,6 +133,11 @@ export function IdeaForm({ user }: { user: { username: string; displayName: stri
       if (!response.ok) {
         throw new Error(data.error || "Failed to create project.");
       }
+
+      posthog.capture("idea_declared", {
+        projectId: data.id,
+        title: data.title,
+      });
 
       router.push(`/project/${data.id}`);
       router.refresh();

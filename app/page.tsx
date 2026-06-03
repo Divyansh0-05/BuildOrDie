@@ -120,17 +120,6 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
 
   return (
     <main className="min-h-screen bg-bg-primary text-text-primary">
-      <nav className="border-b border-border px-6 py-4">
-        <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <Link href="/" className="font-black text-xl">Build<span className="text-brand-orange">OrDie</span></Link>
-          <div className="flex items-center gap-4 text-sm text-text-secondary">
-            <Link href="/leaderboard">Leaderboard</Link>
-            <Link href="/passes">Passes</Link>
-            <Link href="/submit" className="bg-brand-orange px-4 py-2 font-bold text-bg-primary">Start the clock</Link>
-          </div>
-        </div>
-      </nav>
-
       <section className="mx-auto grid max-w-6xl gap-10 px-6 py-12">
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-7">

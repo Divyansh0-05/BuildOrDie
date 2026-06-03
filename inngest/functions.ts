@@ -135,6 +135,26 @@ export async function handleFinalKick(projectId: string) {
     ...email,
   });
 
+  if (process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://app.posthog.com"}/capture/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          api_key: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+          event: "project_kicked",
+          properties: {
+            distinct_id: project.userId,
+            projectId: project.id,
+            title: project.title,
+          },
+        }),
+      });
+    } catch (phErr) {
+      console.error("Failed to track project_kicked in PostHog:", phErr);
+    }
+  }
+
   return { kicked: true, status: kickedProject.status };
 }
 
@@ -147,7 +167,10 @@ export async function handleActivateBoostSlot(projectId: string) {
     },
     include: { user: true },
   });
-  const email = await boostLiveEmail(project.title, projectUrl(project.id));
+  const durationDays = project.boostedUntil && project.boostedFrom
+    ? Math.round((project.boostedUntil.getTime() - project.boostedFrom.getTime()) / (1000 * 60 * 60 * 24))
+    : 7;
+  const email = await boostLiveEmail(project.title, projectUrl(project.id), durationDays);
 
   await sendEmail({
     to: project.user.email,

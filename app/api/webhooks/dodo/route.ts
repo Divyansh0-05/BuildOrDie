@@ -163,7 +163,7 @@ export async function POST(request: Request) {
                     data: { plan: "FOUNDER" },
                 });
 
-                return { success: true, type: "founderPass", email: user.email };
+                return { success: true, type: "founderPass", email: user.email, userId: user.id };
             }
 
             if (isInvestorAccess) {
@@ -182,7 +182,7 @@ export async function POST(request: Request) {
                     },
                 });
 
-                return { success: true, type: "investorAccess" };
+                return { success: true, type: "investorAccess", email: user.email, userId: user.id };
             }
 
             if (isStarterBoost || isFullSpotlight) {
@@ -200,7 +200,14 @@ export async function POST(request: Request) {
 
                 const now = new Date();
                 const startsAt = metadata.startsAt ? new Date(metadata.startsAt) : now;
-                const durationDays = metadata.durationDays ? parseInt(metadata.durationDays, 10) : 30;
+                let durationDays = 30;
+                if (metadata.durationDays) {
+                    durationDays = parseInt(metadata.durationDays, 10);
+                } else if (isStarterBoost) {
+                    durationDays = 3;
+                } else if (isFullSpotlight) {
+                    durationDays = 7;
+                }
                 const endsAt = new Date(startsAt.getTime() + durationDays * 24 * 60 * 60 * 1000);
 
                 const isNowActive = startsAt <= now;
@@ -223,6 +230,7 @@ export async function POST(request: Request) {
                     startsAt,
                     endsAt,
                     email: user.email,
+                    userId: user.id,
                 };
             }
 
@@ -244,6 +252,25 @@ export async function POST(request: Request) {
                     });
                 } catch (emailErr) {
                     console.error("Failed to send Founder Pass email", emailErr);
+                }
+
+                if (process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+                    try {
+                        await fetch(`${process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://app.posthog.com"}/capture/`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                api_key: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+                                event: "founder_pass_purchased",
+                                properties: {
+                                    distinct_id: result.userId,
+                                    email: result.email,
+                                },
+                            }),
+                        });
+                    } catch (phErr) {
+                        console.error("Failed to track founder_pass_purchased in PostHog:", phErr);
+                    }
                 }
             }
 
@@ -269,6 +296,27 @@ export async function POST(request: Request) {
                     });
                 } catch (emailErr) {
                     console.error("Failed to send Boost Queued email", emailErr);
+                }
+
+                if (process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+                    try {
+                        await fetch(`${process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://app.posthog.com"}/capture/`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                api_key: process.env.NEXT_PUBLIC_POSTHOG_KEY,
+                                event: "boost_purchased",
+                                properties: {
+                                    distinct_id: result.userId,
+                                    projectId: result.projectId,
+                                    projectTitle: result.projectTitle,
+                                    productType: result.type,
+                                },
+                            }),
+                        });
+                    } catch (phErr) {
+                        console.error("Failed to track boost_purchased in PostHog:", phErr);
+                    }
                 }
             }
 

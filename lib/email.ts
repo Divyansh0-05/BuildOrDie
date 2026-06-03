@@ -148,7 +148,7 @@ export async function boostLiveEmail(
   const html = await render(element);
   const text = await render(element, { plainText: true });
   return {
-    subject: "Your ad is live now. 7 days on the homepage.",
+    subject: `Your ad is live now. ${durationDays} days on the homepage.`,
     html,
     text,
   };

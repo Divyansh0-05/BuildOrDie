@@ -148,7 +148,7 @@ export async function POST(request: Request) {
       earliestStart = new Date(Math.min(...endTimes.map((t) => t.getTime())));
     }
 
-    const durationDays = 30; // Starter Boost and Full Spotlight both have 30 day duration as per prompt
+    const durationDays = productType === "starterBoost" ? 3 : 7;
     const returnUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/project/${projectId}`;
 
     const checkoutUrl = await createDodoCheckoutSession({
