@@ -35,31 +35,31 @@ export function LiveFoundersTable({
   const stackBuilders = builders.filter((b) => !!b.xHandle).slice(0, 5);
 
   return (
-    <div className="bg-surface border border-border rounded-md p-5 mb-6 select-none">
+    <div className="bg-surface border border-border rounded-md p-4 sm:p-5 mb-6 select-none w-full max-w-full overflow-hidden">
       {/* Tribe Header */}
-      <div className="flex items-center justify-between mb-4">
-        <span className="font-mono text-[11.5px] font-bold tracking-[0.12em] text-text-muted uppercase">
+      <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2 mb-4">
+        <span className="font-mono text-[10px] xs:text-[11.5px] font-bold tracking-[0.08em] xs:tracking-[0.12em] text-text-muted uppercase">
           {"// THE LIVING TRIBE — BUILDING NOW"}
         </span>
-        <span className="flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase text-brand-orange">
+        <span className="flex items-center gap-1.5 text-[10px] xs:text-[11px] font-mono font-bold uppercase text-brand-orange">
           <span className="w-2 h-2 rounded-full bg-brand-orange animate-pulse" />
           LIVE FEED
         </span>
       </div>
 
       {/* Avatar Stack Summary Row */}
-      <div className="flex items-center gap-4 mb-4.5">
-        <div className="flex items-center -space-x-2.5">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-4.5">
+        <div className="flex items-center -space-x-1.5 sm:-space-x-2 md:-space-x-2.5 select-none">
           {stackBuilders.map((builder) => (
             <div
               key={builder.username}
-              className="w-10 h-10 rounded-full border-2 border-surface bg-rock-3 overflow-hidden shrink-0"
+              className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full border-2 border-surface bg-rock-3 overflow-hidden shrink-0"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`https://unavatar.io/x/${builder.xHandle}`}
                 alt={builder.displayName}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-full"
                 onError={(e) => {
                   (e.target as HTMLElement).style.display = "none";
                 }}
@@ -67,12 +67,12 @@ export function LiveFoundersTable({
             </div>
           ))}
           {builders.length > 5 && (
-            <div className="w-10 h-10 rounded-full border-2 border-surface bg-brand-orange/15 text-brand-orange flex items-center justify-center font-mono font-bold text-[11px] shrink-0">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full border-2 border-surface bg-brand-orange/15 text-brand-orange flex items-center justify-center font-mono font-bold text-[10px] sm:text-[11px] shrink-0">
               +{builders.length - 5}
             </div>
           )}
         </div>
-        <div className="font-mono text-sm text-text-secondary leading-normal">
+        <div className="font-mono text-xs sm:text-sm text-text-secondary leading-normal">
           <strong className="text-text-primary">{totalShippedCount} builders</strong> have shipped here.<br />
           {totalBuildersCount} are carving their idea right now.
         </div>
@@ -84,15 +84,15 @@ export function LiveFoundersTable({
           Nobody is carving their stone right now.
         </div>
       ) : (
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 w-full">
           {visibleBuilders.map((builder) => (
             <Link
               key={builder.projectId}
               href={`/project/${builder.projectId}`}
-              className="flex items-center gap-3.5 p-3 bg-rock border border-border hover:border-text-muted rounded-sm transition-all duration-150 group cursor-pointer"
+              className="flex items-start md:items-center gap-3.5 p-3 bg-rock border border-border hover:border-text-muted rounded-sm transition-all duration-150 group cursor-pointer w-full max-w-full"
             >
               {/* Avatar */}
-              <div className="w-9 h-9 rounded-full bg-rock-3 border border-border overflow-hidden shrink-0 flex items-center justify-center font-mono font-bold text-xs text-text-secondary">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-full bg-rock-3 border border-border overflow-hidden shrink-0 flex items-center justify-center font-mono font-bold text-[10px] sm:text-xs text-text-secondary mt-0.5 md:mt-0">
                 {builder.xHandle ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -115,19 +115,23 @@ export function LiveFoundersTable({
                 )}
               </div>
 
-              {/* Info */}
-              <div className="flex-1 min-w-0">
-                <div className="font-mono text-[13px] font-bold text-text-primary group-hover:text-brand-orange transition-colors truncate">
-                  {builder.displayName}
+              {/* Info & Status stacked container */}
+              <div className="flex-1 min-w-0 flex flex-col md:flex-row md:items-center justify-between gap-2.5">
+                {/* Text Info */}
+                <div className="min-w-0">
+                  <div className="font-mono text-[13px] md:text-sm font-bold text-text-primary group-hover:text-brand-orange transition-colors truncate">
+                    {builder.displayName}
+                  </div>
+                  <div className="text-[11.5px] md:text-xs text-text-muted truncate mt-0.5">
+                    {builder.projectTitle}
+                  </div>
                 </div>
-                <div className="text-[11.5px] text-text-muted truncate">
-                  {builder.projectTitle}
-                </div>
-              </div>
 
-              {/* Status/Timer */}
-              <div className="text-right shrink-0">
-                <CountdownTimer deadlineAt={builder.deadlineAt} variant="small" />
+                {/* Status/Timer */}
+                <div className="md:text-right shrink-0 mt-1 md:mt-0 flex items-center md:block">
+                  <span className="uppercase text-[9px] text-text-muted font-bold md:hidden mr-1.5">Clock:</span>
+                  <CountdownTimer deadlineAt={builder.deadlineAt} variant="small" />
+                </div>
               </div>
             </Link>
           ))}

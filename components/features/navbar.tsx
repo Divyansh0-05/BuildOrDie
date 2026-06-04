@@ -46,7 +46,7 @@ export async function Navbar() {
         {/* Navigation links */}
         <div className="flex items-center gap-2 sm:gap-3">
           <NavbarLinks userId={userId} isAdmin={isAdmin} isInvestor={isInvestor} />
-          
+
           <div className="flex items-center gap-1.5 sm:gap-2.5 pl-1 sm:pl-1.5">
             {userId ? (
               <UserButton afterSignOutUrl="/" />
