@@ -88,7 +88,7 @@ export default function PassesPage() {
 
   return (
     <main className="min-h-screen bg-bg-primary px-8 py-14 text-text-primary pb-24 select-none">
-      <section className="mx-auto max-w-5xl space-y-10">
+      <section className="mx-auto max-w-[1400px] space-y-10">
         <div className="space-y-1.5">
           <h1 className="font-gothic text-5xl font-bold tracking-wide text-text-primary mb-1">
             Sacred Offerings

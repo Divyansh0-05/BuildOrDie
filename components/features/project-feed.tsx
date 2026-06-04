@@ -121,7 +121,7 @@ export function ProjectFeed({
   return (
     <div className="space-y-6 select-none">
       {/* Filter Pills */}
-      <div className="flex flex-wrap gap-2 select-none">
+      <div className="flex flex-wrap justify-center gap-2 select-none">
         {FILTERS.map((item) => (
           <button
             key={item}
@@ -139,7 +139,7 @@ export function ProjectFeed({
       </div>
 
       {/* Search Input Box */}
-      <div className="flex max-w-xl gap-2 relative">
+      <div className="flex max-w-xl mx-auto gap-2 relative w-full">
         <input
           value={search}
           onChange={handleSearchChange}

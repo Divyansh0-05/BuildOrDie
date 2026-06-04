@@ -180,7 +180,7 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
     <main className="min-h-screen bg-bg-primary text-text-primary pb-20">
       {/* ─── LIVE TICKER ─── */}
       <div className="bg-surface border-b border-border py-3 px-8 overflow-hidden select-none">
-        <div className="mx-auto max-w-6xl flex items-center justify-between gap-6">
+        <div className="mx-auto max-w-[1400px] flex items-center justify-between gap-6">
           <div className="flex items-center gap-6 overflow-x-auto whitespace-nowrap scrollbar-none py-0.5 text-xs font-mono text-text-secondary w-full">
             {tickerItems.map((item, index) => (
               <div key={index} className="flex items-center gap-6 shrink-0 font-bold">
@@ -192,7 +192,7 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
         </div>
       </div>
 
-      <section className="mx-auto max-w-6xl px-8 py-10 space-y-10">
+      <section className="mx-auto max-w-[1400px] px-4 sm:px-8 py-10 space-y-10">
         {/* ─── HERO & TRIBE GRID ─── */}
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
           {/* Hero text */}
@@ -278,12 +278,12 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
                 BUILDERS ON THE EDGE OF THE CLIFF — LESS THAN 12 HOURS REMAINING
               </span>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+            <div className="flex flex-wrap justify-center gap-4">
               {buildersAboutToDie.map((project) => (
                 <Link
                   key={project.id}
                   href={`/project/${project.id}`}
-                  className="bg-rock border border-border p-5 hover:border-danger transition-colors rounded flex flex-col justify-between"
+                  className="bg-rock border border-border p-5 hover:border-danger transition-colors rounded flex flex-col justify-between w-full sm:w-[calc(50%-12px)] md:w-[calc(33.33%-16px)] max-w-[380px]"
                 >
                   <div>
                     <div className="font-mono text-sm font-bold text-text-primary truncate mb-1">
@@ -293,11 +293,14 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
                       {project.tagline}
                     </p>
                   </div>
-                  <div className="flex items-center justify-between pt-2.5 border-t border-border/40 mt-auto">
+                  <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2 pt-2.5 border-t border-border/40 mt-auto">
                     <span className="text-[11px] font-mono text-text-muted truncate font-bold">
                       @{project.user.username}
                     </span>
-                    <CountdownTimer deadlineAt={project.deadlineAt.toISOString()} variant="small" />
+                    <div className="flex items-center gap-1">
+                      <span className="uppercase text-[9px] text-text-muted font-bold xs:hidden">Clock:</span>
+                      <CountdownTimer deadlineAt={project.deadlineAt.toISOString()} variant="small" />
+                    </div>
                   </div>
                 </Link>
               ))}
@@ -357,11 +360,11 @@ export default async function Home({ searchParams }: { searchParams: HomeSearchP
               No builders have fallen to the cliff recently. The line holds.
             </p>
           ) : (
-            <div className="mx-auto max-w-2xl grid gap-4 sm:grid-cols-3">
+            <div className="mx-auto max-w-2xl flex flex-wrap justify-center gap-4">
               {recentCasualties.map((project) => (
                 <div
                   key={project.id}
-                  className="bg-rock border border-border p-4.5 rounded text-left flex flex-col justify-between"
+                  className="bg-rock border border-border p-4.5 rounded text-left flex flex-col justify-between w-full sm:w-[calc(50%-12px)] md:w-[calc(33.33%-16px)] max-w-[280px]"
                 >
                   <div>
                     <div className="font-mono text-sm font-bold text-text-primary truncate mb-1">

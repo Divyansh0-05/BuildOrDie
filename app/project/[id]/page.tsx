@@ -110,7 +110,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
 
   return (
     <main className="min-h-screen bg-bg-primary px-8 py-12 text-text-primary pb-24 select-none">
-      <div className="mx-auto max-w-6xl space-y-7">
+      <div className="mx-auto max-w-[1400px] space-y-7">
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-text-muted hover:text-text-secondary uppercase select-none mb-3"

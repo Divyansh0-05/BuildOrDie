@@ -307,7 +307,7 @@ export default function ToolsPage() {
 
   return (
     <main className="min-h-screen bg-bg-primary px-8 py-14 text-text-primary pb-24 select-none">
-      <section className="mx-auto max-w-5xl space-y-10">
+      <section className="mx-auto max-w-[1400px] space-y-10">
         <div className="space-y-1.5">
           <h1 className="font-gothic text-5xl font-bold tracking-wide text-text-primary mb-1">
             The Builder&apos;s Forge
@@ -351,7 +351,7 @@ export default function ToolsPage() {
             No tools found in the forge.
           </div>
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredTools.map((tool) => (
               <StoneCard
                 key={tool.name}

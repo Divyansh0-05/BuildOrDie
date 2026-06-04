@@ -40,11 +40,11 @@ export default async function DashboardPage() {
 
   return (
     <main className="min-h-screen bg-bg-primary px-8 py-14 text-text-primary pb-24 select-none">
-      <div className="mx-auto max-w-6xl space-y-7">
+      <div className="mx-auto max-w-[1400px] space-y-7">
         <SectionLabel label="YOUR COMMAND CENTER" />
 
         {/* Dashboard Grid */}
-        <div className="grid gap-10 lg:grid-cols-[300px_1fr]">
+        <div className="grid gap-6 md:grid-cols-[240px_1fr] lg:grid-cols-[300px_1fr]">
           {/* Sidebar */}
           <div className="space-y-5">
             {/* Profile Panel */}
@@ -64,28 +64,28 @@ export default async function DashboardPage() {
               </div>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-3 gap-2 mt-6">
-                <div className="bg-surface border border-border p-2.5 rounded-sm text-center">
-                  <div className="font-mono text-sm font-bold text-text-primary leading-none mb-1">
+              <div className="grid grid-cols-3 gap-1 sm:gap-2 mt-6">
+                <div className="bg-surface border border-border p-1.5 sm:p-2.5 rounded-sm text-center">
+                  <div className="font-mono text-xs sm:text-sm font-bold text-text-primary leading-none mb-1">
                     {user.totalShipped}
                   </div>
-                  <div className="text-[9px] text-text-muted font-mono uppercase tracking-wider leading-none font-bold">
+                  <div className="text-[7px] sm:text-[9px] text-text-muted font-mono uppercase tracking-wider leading-none font-bold">
                     shipped
                   </div>
                 </div>
-                <div className="bg-surface border border-border p-2.5 rounded-sm text-center">
-                  <div className="font-mono text-sm font-bold text-text-primary leading-none mb-1">
+                <div className="bg-surface border border-border p-1.5 sm:p-2.5 rounded-sm text-center">
+                  <div className="font-mono text-xs sm:text-sm font-bold text-text-primary leading-none mb-1">
                     {user.totalKicked}
                   </div>
-                  <div className="text-[9px] text-text-muted font-mono uppercase tracking-wider leading-none font-bold">
+                  <div className="text-[7px] sm:text-[9px] text-text-muted font-mono uppercase tracking-wider leading-none font-bold">
                     kicked
                   </div>
                 </div>
-                <div className="bg-surface border border-border p-2.5 rounded-sm text-center">
-                  <div className="font-mono text-sm font-bold text-brand-orange leading-none mb-1">
+                <div className="bg-surface border border-border p-1.5 sm:p-2.5 rounded-sm text-center">
+                  <div className="font-mono text-xs sm:text-sm font-bold text-brand-orange leading-none mb-1">
                     {shipRate}%
                   </div>
-                  <div className="text-[9px] text-text-muted font-mono uppercase tracking-wider leading-none font-bold">
+                  <div className="text-[7px] sm:text-[9px] text-text-muted font-mono uppercase tracking-wider leading-none font-bold">
                     rate
                   </div>
                 </div>

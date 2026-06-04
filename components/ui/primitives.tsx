@@ -146,7 +146,7 @@ export function StatBar({ stats, className }: StatBarProps) {
   return (
     <div
       className={cn(
-        "grid grid-cols-2 sm:grid-cols-4 gap-[1px] bg-border border border-border rounded-md overflow-hidden select-none",
+        "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[1px] bg-border border border-border rounded-md overflow-hidden select-none",
         className
       )}
     >

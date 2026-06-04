@@ -136,27 +136,27 @@ export function CountdownTimer({
       </div>
 
       {/* Digits Display */}
-      <div className="flex items-end gap-2">
+      <div className="flex items-end gap-1 sm:gap-2">
         <div className="flex flex-col items-center">
-          <div className={cn("font-mono text-5xl sm:text-6xl font-black tracking-tighter leading-none", colorClass)}>
+          <div className={cn("font-mono text-3xl xs:text-5xl sm:text-6xl font-black tracking-tighter leading-none", colorClass)}>
             {pad(hours)}
           </div>
           <div className="text-[10.5px] font-mono text-text-muted mt-1.5 uppercase tracking-wider font-bold">HRS</div>
         </div>
 
-        <div className="font-mono text-4xl sm:text-5xl text-border-strong pb-4 leading-none select-none">:</div>
+        <div className="font-mono text-2xl xs:text-4xl sm:text-5xl text-border-strong pb-3 sm:pb-4 leading-none select-none">:</div>
 
         <div className="flex flex-col items-center">
-          <div className={cn("font-mono text-5xl sm:text-6xl font-black tracking-tighter leading-none", colorClass)}>
+          <div className={cn("font-mono text-3xl xs:text-5xl sm:text-6xl font-black tracking-tighter leading-none", colorClass)}>
             {pad(minutes)}
           </div>
           <div className="text-[10.5px] font-mono text-text-muted mt-1.5 uppercase tracking-wider font-bold">MIN</div>
         </div>
 
-        <div className="font-mono text-4xl sm:text-5xl text-border-strong pb-4 leading-none select-none">:</div>
+        <div className="font-mono text-2xl xs:text-4xl sm:text-5xl text-border-strong pb-3 sm:pb-4 leading-none select-none">:</div>
 
         <div className="flex flex-col items-center">
-          <div className={cn("font-mono text-5xl sm:text-6xl font-black tracking-tighter leading-none", colorClass)}>
+          <div className={cn("font-mono text-3xl xs:text-5xl sm:text-6xl font-black tracking-tighter leading-none", colorClass)}>
             {pad(seconds)}
           </div>
           <div className="text-[10.5px] font-mono text-text-muted mt-1.5 uppercase tracking-wider font-bold">SEC</div>

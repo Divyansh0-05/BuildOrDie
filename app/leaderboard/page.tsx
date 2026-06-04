@@ -15,7 +15,7 @@ export default async function LeaderboardPage() {
 
   return (
     <main className="min-h-screen bg-bg-primary px-6 py-12 text-text-primary pb-20 select-none">
-      <section className="mx-auto max-w-5xl space-y-6">
+      <section className="mx-auto max-w-[1400px] space-y-6">
         <div>
           <h1 className="font-gothic text-4xl font-bold tracking-wide text-text-primary mb-1">
             The Honored Builders

@@ -40,7 +40,7 @@ export function FeaturedStrip({ projects }: FeaturedStripProps) {
       </div>
 
       {/* Horizontal Scroll Strip */}
-      <div className="flex gap-4 overflow-x-auto pb-3">
+      <div className="flex gap-4 overflow-x-auto pb-3 md:justify-center">
         {/* Render filled projects */}
         {filledSlots.map((project) => (
           <Link
